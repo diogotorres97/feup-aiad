@@ -8,56 +8,82 @@ import sajas.wrapper.ContainerController;
 import uchicago.src.sim.engine.SimInit;
 
 public class Launcher extends Repast3Launcher {
-
+    private int LIFT_MAX_CAPACITY = 6;
+    private int LIFT_SPEED = 20;
+    private int NUM_FLOORS = 10;
+    private int NUM_LIFTS = 4;
 
     private ContainerController mainContainer;
-    private ContainerController agentContainer;
 
-    /**
-     * Launching Repast3
-     *
-     * @param args
-     */
     public static void main(String[] args) {
         SimInit init = new SimInit();
         init.setNumRuns(1);   // works only in batch mode
-        init.loadModel(new Launcher(), null, true);
+        init.loadModel(new Launcher(), null, false);
     }
 
     @Override
     public String[] getInitParam() {
-        return new String[0];
+        return new String[]{"LIFT_MAX_CAPACITY", "LIFT_SPEED", "NUM_FLOORS", "NUM_LIFTS"};
     }
 
     @Override
     public String getName() {
-        return "Service Consumer/Provider -- SAJaS Repast3 Test";
+        return "AIAD Group 50 - Lift Management";
     }
 
     @Override
     protected void launchJADE() {
 
         Runtime rt = Runtime.instance();
-        Profile p1 = new ProfileImpl();
-        mainContainer = rt.createMainContainer(p1);
-
-        if (true) {
-            Profile p2 = new ProfileImpl();
-            agentContainer = rt.createAgentContainer(p2);
-        } else {
-            agentContainer = mainContainer;
-        }
+        Profile p = new ProfileImpl();
+        mainContainer = rt.createMainContainer(p);
 
         launchAgents();
     }
 
     private void launchAgents() {
+        System.out.println(LIFT_MAX_CAPACITY + "|" + LIFT_SPEED + "|" + NUM_FLOORS + "|" + NUM_LIFTS);
         try {
-            agentContainer.acceptNewAgent("spy", new BuildingAgent()).start();
+            mainContainer.acceptNewAgent("spy", new BuildingAgent(NUM_FLOORS)).start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
 
     }
 
+    /*
+     * Getters/setters necessary for repast GUI parametrization
+     */
+
+    public int getLIFT_MAX_CAPACITY() {
+        return LIFT_MAX_CAPACITY;
+    }
+
+    public void setLIFT_MAX_CAPACITY(int LIFT_MAX_CAPACITY) {
+        this.LIFT_MAX_CAPACITY = LIFT_MAX_CAPACITY;
+    }
+
+    public int getLIFT_SPEED() {
+        return LIFT_SPEED;
+    }
+
+    public void setLIFT_SPEED(int LIFT_SPEED) {
+        this.LIFT_SPEED = LIFT_SPEED;
+    }
+
+    public int getNUM_FLOORS() {
+        return NUM_FLOORS;
+    }
+
+    public void setNUM_FLOORS(int NUM_FLOORS) {
+        this.NUM_FLOORS = NUM_FLOORS;
+    }
+
+    public int getNUM_LIFTS() {
+        return NUM_LIFTS;
+    }
+
+    public void setNUM_LIFTS(int NUM_LIFTS) {
+        this.NUM_LIFTS = NUM_LIFTS;
+    }
 }
