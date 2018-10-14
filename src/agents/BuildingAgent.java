@@ -11,6 +11,7 @@ public class BuildingAgent extends Agent {
     public BuildingAgent(int numFloors) {
         this.numFloors = numFloors;
     }
+
     @Override
     protected void setup() {
         System.out.println("Setup done");
@@ -43,7 +44,7 @@ public class BuildingAgent extends Agent {
         @Override
         public boolean done() {
             System.out.println("Oi x " + x);
-            return x > 8;
+            return x > numFloors/2;
         }
     }
 }
