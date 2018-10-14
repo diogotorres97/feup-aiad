@@ -7,20 +7,24 @@ import sajas.core.Agent;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
+import uchicago.src.reflector.ListPropertyDescriptor;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Object2DDisplay;
 import uchicago.src.sim.space.Object2DGrid;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class Launcher extends Repast3Launcher {
     public static boolean BATCH_MODE = false;
 
     private int LIFT_MAX_CAPACITY = 6;
-    private int LIFT_SPEED = 20;
+    private int CALL_FREQUENCY = 20;
     private int NUM_FLOORS = 5;
     private int NUM_LIFTS = 4;
+    private int LIFT_STRATEGY = 0;
+    private int CALL_STRATEGY = 0;
 
     private ContainerController mainContainer;
 
@@ -36,7 +40,7 @@ public class Launcher extends Repast3Launcher {
 
     @Override
     public String[] getInitParam() {
-        return new String[]{"LIFT_MAX_CAPACITY", "LIFT_SPEED", "NUM_FLOORS", "NUM_LIFTS"};
+        return new String[]{"CALL_STRATEGY", "LIFT_MAX_CAPACITY", "CALL_FREQUENCY", "LIFT_STRATEGY", "NUM_FLOORS", "NUM_LIFTS"};
     }
 
     @Override
@@ -47,6 +51,22 @@ public class Launcher extends Repast3Launcher {
     @Override
     public void setup() {
         super.setup();
+
+        // Setup combobox parameter for lift behavior strategy
+        Hashtable h1 = new Hashtable();
+        h1.put(new Integer(0), "Traditional");
+        h1.put(new Integer(1), "Closest w/ estimate");
+        h1.put(new Integer(2), "Closest w/o estimate");
+        ListPropertyDescriptor pd1 = new ListPropertyDescriptor("LIFT_STRATEGY", h1);
+
+        // Setup combobox parameter for calling behavior strategy
+        Hashtable h2 = new Hashtable();
+        h2.put(new Integer(0), "Morning traffic");
+        h2.put(new Integer(1), "Mid-day traffic");
+        ListPropertyDescriptor pd2 = new ListPropertyDescriptor("CALL_STRATEGY", h2);
+
+        descriptors.put("LIFT_STRATEGY", pd1);
+        descriptors.put("CALL_STRATEGY", pd2);
 
         dsurf = new DisplaySurface(this,"Lift Management");
         registerDisplaySurface("Lift Management", dsurf);
@@ -94,7 +114,7 @@ public class Launcher extends Repast3Launcher {
     }
 
     private void launchAgents() {
-        System.out.println(LIFT_MAX_CAPACITY + "|" + LIFT_SPEED + "|" + NUM_FLOORS + "|" + NUM_LIFTS);
+        System.out.println(LIFT_MAX_CAPACITY + "|" + CALL_FREQUENCY + "|" + NUM_FLOORS + "|" + NUM_LIFTS + "|" + LIFT_STRATEGY + "|" + CALL_STRATEGY);
         try {
             mainContainer.acceptNewAgent("spy", new BuildingAgent(NUM_FLOORS)).start();
         } catch (StaleProxyException e) {
@@ -115,12 +135,12 @@ public class Launcher extends Repast3Launcher {
         this.LIFT_MAX_CAPACITY = LIFT_MAX_CAPACITY;
     }
 
-    public int getLIFT_SPEED() {
-        return LIFT_SPEED;
+    public int getCALL_FREQUENCY() {
+        return CALL_FREQUENCY;
     }
 
-    public void setLIFT_SPEED(int LIFT_SPEED) {
-        this.LIFT_SPEED = LIFT_SPEED;
+    public void setCALL_FREQUENCY(int CALL_FREQUENCY) {
+        this.CALL_FREQUENCY = CALL_FREQUENCY;
     }
 
     public int getNUM_FLOORS() {
@@ -137,5 +157,21 @@ public class Launcher extends Repast3Launcher {
 
     public void setNUM_LIFTS(int NUM_LIFTS) {
         this.NUM_LIFTS = NUM_LIFTS;
+    }
+
+    public int getLIFT_STRATEGY() {
+        return LIFT_STRATEGY;
+    }
+
+    public void setLIFT_STRATEGY(int LIFT_STRATEGY) {
+        this.LIFT_STRATEGY = LIFT_STRATEGY;
+    }
+
+    public int getCALL_STRATEGY() {
+        return CALL_STRATEGY;
+    }
+
+    public void setCALL_STRATEGY(int CALL_STRATEGY) {
+        this.CALL_STRATEGY = CALL_STRATEGY;
     }
 }
