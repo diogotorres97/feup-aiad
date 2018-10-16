@@ -8,9 +8,11 @@ import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
 import uchicago.src.reflector.ListPropertyDescriptor;
+import uchicago.src.sim.engine.BasicAction;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Object2DDisplay;
+import uchicago.src.sim.space.Multi2DGrid;
 import uchicago.src.sim.space.Object2DGrid;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class Launcher extends Repast3Launcher {
     private ContainerController mainContainer;
 
     private DisplaySurface dsurf;
-    private Object2DGrid space;
+    private Multi2DGrid space;
     private ArrayList<Agent> agentList;
 
     public static void main(String[] args) {
@@ -68,6 +70,7 @@ public class Launcher extends Repast3Launcher {
         descriptors.put("LIFT_STRATEGY", pd1);
         descriptors.put("CALL_STRATEGY", pd2);
 
+        if(dsurf != null) dsurf.dispose();
         dsurf = new DisplaySurface(this,"Lift Management");
         registerDisplaySurface("Lift Management", dsurf);
     }
@@ -83,10 +86,9 @@ public class Launcher extends Repast3Launcher {
         // create and store agents
         // create space, data recorders
         agentList = new ArrayList<>();
-        space = new Object2DGrid(NUM_LIFTS, NUM_FLOORS);
-        LiftAgent agent = new LiftAgent(1, 3, space);
-        space.putObjectAt(agent.getX(), agent.getY(), agent);
-        agentList.add(agent);
+        space = new Multi2DGrid(NUM_LIFTS, NUM_FLOORS, false);
+
+        launchAgents();
     }
 
     private void buildDisplay() {
@@ -94,7 +96,7 @@ public class Launcher extends Repast3Launcher {
         Object2DDisplay agentDisplay = new Object2DDisplay(space);
         agentDisplay.setObjectList(agentList);
 
-        dsurf.addDisplayableProbeable(agentDisplay, "agents");
+        dsurf.addDisplayable(agentDisplay, "agents");
         addSimEventListener(dsurf);
         dsurf.display();
     }
@@ -105,18 +107,27 @@ public class Launcher extends Repast3Launcher {
 
     @Override
     protected void launchJADE() {
-
+        //NOTE TO SELF: THIS IS CALLED BEFORE SETUP()
         Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl();
         mainContainer = rt.createMainContainer(p);
-
-        launchAgents();
     }
 
     private void launchAgents() {
+        for(int i = 0; i < NUM_LIFTS; ++i) {
+            LiftAgent agent = new LiftAgent(i, NUM_FLOORS-1, space);
+            space.putObjectAt(agent.getX(), agent.getY(), agent);
+            try {
+                mainContainer.acceptNewAgent("lift"+i, agent).start();
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
+            agentList.add(agent);
+        }
+
         System.out.println(LIFT_MAX_CAPACITY + "|" + CALL_FREQUENCY + "|" + NUM_FLOORS + "|" + NUM_LIFTS + "|" + LIFT_STRATEGY + "|" + CALL_STRATEGY);
         try {
-            mainContainer.acceptNewAgent("spy", new BuildingAgent(NUM_FLOORS)).start();
+            mainContainer.acceptNewAgent("spy", new BuildingAgent(NUM_FLOORS, CALL_STRATEGY)).start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
