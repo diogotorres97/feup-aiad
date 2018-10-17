@@ -5,20 +5,26 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
 import sajas.core.Agent;
+import sajas.core.behaviours.CyclicBehaviour;
 import sajas.domain.DFService;
 import sajas.proto.ContractNetResponder;
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
 import uchicago.src.sim.space.Multi2DGrid;
 import uchicago.src.sim.space.Object2DGrid;
+import utils.Task;
+
+import java.io.IOException;
+import java.util.Random;
 
 import static java.awt.Color.BLUE;
 
 public class LiftAgent extends Agent implements Drawable {
     private Multi2DGrid space;
-    private int x;
-    private int y;
+    public int x;
+    public int y;
 
     public LiftAgent(int x, int y, Multi2DGrid space) {
         this.x = x;
@@ -26,8 +32,13 @@ public class LiftAgent extends Agent implements Drawable {
         this.space = space;
     }
 
+    public LiftAgent getSelf() {
+        return this;
+    }
+
     @Override
     protected void setup() {
+        //Register as a lift so building can later find out about it at runtime
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -35,9 +46,7 @@ public class LiftAgent extends Agent implements Drawable {
         sd.setName(getLocalName());
         dfd.addServices(sd);
         try {
-            System.out.println("Registering "+getLocalName());
             DFService.register(this, dfd);
-            System.out.println(getName()+"registered successfully!");
         } catch(FIPAException fe) {
             fe.printStackTrace();
         }
@@ -52,9 +61,21 @@ public class LiftAgent extends Agent implements Drawable {
 
 
         protected ACLMessage handleCfp(ACLMessage cfp) {
+            Task task = null;
+            try {
+                task = (Task)cfp.getContentObject();
+            } catch (UnreadableException e) {
+                e.printStackTrace();
+            }
+            System.out.println(getLocalName() + " got request for task: " + task.getOriginFloor() + "|" + task.getDestinationFloor());
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
-            reply.setContent("I will do it for free!!!");
+            Random r = new Random();
+            try {
+                reply.setContentObject(r.nextInt(10));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return reply;
         }
 

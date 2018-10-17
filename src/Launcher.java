@@ -9,6 +9,7 @@ import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
 import uchicago.src.reflector.ListPropertyDescriptor;
 import uchicago.src.sim.engine.BasicAction;
+import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Object2DDisplay;
@@ -17,6 +18,7 @@ import uchicago.src.sim.space.Object2DGrid;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Random;
 
 public class Launcher extends Repast3Launcher {
     public static boolean BATCH_MODE = false;
@@ -33,6 +35,8 @@ public class Launcher extends Repast3Launcher {
     private DisplaySurface dsurf;
     private Multi2DGrid space;
     private ArrayList<Agent> agentList;
+
+    private BuildingAgent building;
 
     public static void main(String[] args) {
         SimInit init = new SimInit();
@@ -103,6 +107,24 @@ public class Launcher extends Repast3Launcher {
 
     private void buildSchedule() {
         // build the schedule
+        getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
+        getSchedule().scheduleActionAtInterval(CALL_FREQUENCY, new BasicAction() {
+            @Override
+            public void execute() {
+                building.newCall();
+            }
+        });
+        //TODO: Just experimenting, delete later
+        getSchedule().scheduleActionAtInterval(25, new BasicAction() {
+            @Override
+            public void execute() {
+                LiftAgent agent = (LiftAgent)agentList.get(0);
+                space.putObjectAt(agent.getX(), agent.getY(), null);
+                Random rng = new Random(System.currentTimeMillis());
+                agent.y = rng.nextInt(space.getSizeY());
+                space.putObjectAt(agent.getX(), agent.getY(), agent);
+            }
+        });
     }
 
     @Override
@@ -125,9 +147,9 @@ public class Launcher extends Repast3Launcher {
             agentList.add(agent);
         }
 
-        System.out.println(LIFT_MAX_CAPACITY + "|" + CALL_FREQUENCY + "|" + NUM_FLOORS + "|" + NUM_LIFTS + "|" + LIFT_STRATEGY + "|" + CALL_STRATEGY);
+        building = new BuildingAgent(NUM_FLOORS, CALL_STRATEGY);
         try {
-            mainContainer.acceptNewAgent("spy", new BuildingAgent(NUM_FLOORS, CALL_STRATEGY)).start();
+            mainContainer.acceptNewAgent("spy", building).start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }

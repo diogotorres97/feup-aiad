@@ -4,15 +4,25 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 import sajas.core.Agent;
-import sajas.core.behaviours.Behaviour;
 import sajas.domain.DFService;
 import sajas.proto.ContractNetInitiator;
+import utils.Task;
 import utils.call.CallStrategy;
 import utils.call.MidCallStrategy;
 import utils.call.MorningCallStrategy;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.OptionalInt;
 import java.util.Vector;
+import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.lang.Integer.MAX_VALUE;
 
 public class BuildingAgent extends Agent {
     private int numFloors;
@@ -32,9 +42,7 @@ public class BuildingAgent extends Agent {
     }
 
     @Override
-    protected void setup() {
-        addBehaviour(new FIPAContractNetInit(this, new ACLMessage(ACLMessage.CFP)));
-    }
+    protected void setup() {}
 
     @Override
     protected void takeDown() {
@@ -49,25 +57,6 @@ public class BuildingAgent extends Agent {
         this.numFloors = numFloors;
     }
 
-    //TODO: delete, just for experimenting
-    public BuildingAgent getSelf() {
-        return this;
-    }
-
-    private class genericBehaviour extends Behaviour {
-        private int x;
-
-        @Override
-        public void action() {
-            x = callStrategy.generateOriginFloor();
-        }
-
-        @Override
-        public boolean done() {
-            return true;
-        }
-    }
-
     private class FIPAContractNetInit extends ContractNetInitiator {
 
         public FIPAContractNetInit(Agent a, ACLMessage msg) {
@@ -75,14 +64,15 @@ public class BuildingAgent extends Agent {
         }
 
         protected Vector prepareCfps(ACLMessage cfp) {
-            Vector v = new Vector();
-            
+            Vector<ACLMessage> v = new Vector<ACLMessage>();
+
+            //Could do this only once at setup, but this way more lifts can be incorporated at runtime
             DFAgentDescription template = new DFAgentDescription();
             ServiceDescription sd = new ServiceDescription();
             sd.setType("lift");
             template.addServices(sd);
             try {
-                DFAgentDescription[] result = DFService.search(getSelf(), template);
+                DFAgentDescription[] result = DFService.search(myAgent, template);
                 System.out.println(result.length);
                 for(int i=0; i<result.length; ++i)
                     cfp.addReceiver(result[i].getName());
@@ -99,10 +89,30 @@ public class BuildingAgent extends Agent {
 
             System.out.println("got " + responses.size() + " responses!");
 
+            int min = MAX_VALUE;
+            for(int i = 0; i < responses.size(); ++i) {
+                int curr = MAX_VALUE;
+                try {
+                    curr = (Integer)((ACLMessage)responses.get(i)).getContentObject();
+                } catch (UnreadableException e) {
+                    e.printStackTrace();
+                }
+
+                if(curr < min) min = curr;
+            }
+
             for(int i=0; i<responses.size(); i++) {
-                ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
-                msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL); // OR NOT!
-                acceptances.add(msg);
+                ACLMessage current = (ACLMessage)responses.get(i);
+                try {
+                    if((Integer)current.getContentObject() == min) {
+                        ACLMessage msg = current.createReply();
+                        msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                        acceptances.add(msg);
+                        break;
+                    }
+                } catch (UnreadableException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -110,5 +120,15 @@ public class BuildingAgent extends Agent {
             System.out.println("got " + resultNotifications.size() + " result notifs!");
         }
 
+    }
+
+    public void newCall() {
+        ACLMessage msg = new ACLMessage(ACLMessage.CFP);
+        try {
+            msg.setContentObject(new Task(callStrategy.generateOriginFloor(), callStrategy.generateDestinationFloor()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        addBehaviour(new FIPAContractNetInit(this, msg));
     }
 }
