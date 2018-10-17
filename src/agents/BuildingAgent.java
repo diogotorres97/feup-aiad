@@ -3,12 +3,16 @@ package agents;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
 import sajas.core.Agent;
 import sajas.core.behaviours.Behaviour;
 import sajas.domain.DFService;
+import sajas.proto.ContractNetInitiator;
 import utils.call.CallStrategy;
 import utils.call.MidCallStrategy;
 import utils.call.MorningCallStrategy;
+
+import java.util.Vector;
 
 public class BuildingAgent extends Agent {
     private int numFloors;
@@ -29,7 +33,7 @@ public class BuildingAgent extends Agent {
 
     @Override
     protected void setup() {
-        addBehaviour(new genericBehaviour());
+        addBehaviour(new FIPAContractNetInit(this, new ACLMessage(ACLMessage.CFP)));
     }
 
     @Override
@@ -56,6 +60,23 @@ public class BuildingAgent extends Agent {
         @Override
         public void action() {
             x = callStrategy.generateOriginFloor();
+        }
+
+        @Override
+        public boolean done() {
+            return true;
+        }
+    }
+
+    private class FIPAContractNetInit extends ContractNetInitiator {
+
+        public FIPAContractNetInit(Agent a, ACLMessage msg) {
+            super(a, msg);
+        }
+
+        protected Vector prepareCfps(ACLMessage cfp) {
+            Vector v = new Vector();
+            
             DFAgentDescription template = new DFAgentDescription();
             ServiceDescription sd = new ServiceDescription();
             sd.setType("lift");
@@ -63,17 +84,31 @@ public class BuildingAgent extends Agent {
             try {
                 DFAgentDescription[] result = DFService.search(getSelf(), template);
                 System.out.println(result.length);
-                for(int i=0; i<result.length; ++i) {
-                    System.out.println("Found " + result[i].getName());
-                }
+                for(int i=0; i<result.length; ++i)
+                    cfp.addReceiver(result[i].getName());
             } catch(FIPAException fe) {
                 fe.printStackTrace();
             }
+
+            v.add(cfp);
+
+            return v;
         }
 
-        @Override
-        public boolean done() {
-            return true;
+        protected void handleAllResponses(Vector responses, Vector acceptances) {
+
+            System.out.println("got " + responses.size() + " responses!");
+
+            for(int i=0; i<responses.size(); i++) {
+                ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
+                msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL); // OR NOT!
+                acceptances.add(msg);
+            }
         }
+
+        protected void handleAllResultNotifications(Vector resultNotifications) {
+            System.out.println("got " + resultNotifications.size() + " result notifs!");
+        }
+
     }
 }
