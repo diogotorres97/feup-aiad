@@ -13,9 +13,9 @@ import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Object2DDisplay;
-import uchicago.src.sim.space.Multi2DGrid;
 import uchicago.src.sim.space.Object2DGrid;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Random;
@@ -34,7 +34,7 @@ public class Launcher extends Repast3Launcher {
     private ContainerController mainContainer;
 
     private DisplaySurface dsurf;
-    private Multi2DGrid space;
+    private Object2DGrid space;
     private ArrayList<Agent> agentList;
 
     private BuildingAgent building;
@@ -91,7 +91,7 @@ public class Launcher extends Repast3Launcher {
         // create and store agents
         // create space, data recorders
         agentList = new ArrayList<>();
-        space = new Multi2DGrid(NUM_LIFTS, NUM_FLOORS, false);
+        space = new Object2DGrid(NUM_LIFTS, NUM_FLOORS);
 
         launchAgents();
     }
@@ -102,6 +102,7 @@ public class Launcher extends Repast3Launcher {
         agentDisplay.setObjectList(agentList);
 
         dsurf.addDisplayable(agentDisplay, "agents");
+        dsurf.setBackground(Color.WHITE);
         addSimEventListener(dsurf);
         dsurf.display();
     }
@@ -119,10 +120,10 @@ public class Launcher extends Repast3Launcher {
         getSchedule().scheduleActionAtInterval(LIFT_SPEED, new BasicAction() {
             @Override
             public void execute() {
-                LiftAgent agent = (LiftAgent)agentList.get(0);
+                LiftAgent agent = (LiftAgent)agentList.get(1);
                 space.putObjectAt(agent.getX(), agent.getY(), null);
                 Random rng = new Random(System.currentTimeMillis());
-                agent.y = rng.nextInt(space.getSizeY());
+                agent.y = rng.nextInt(2) + NUM_FLOORS-2;
                 space.putObjectAt(agent.getX(), agent.getY(), agent);
             }
         });

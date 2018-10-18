@@ -7,27 +7,24 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import sajas.core.Agent;
-import sajas.core.behaviours.CyclicBehaviour;
 import sajas.domain.DFService;
 import sajas.proto.ContractNetResponder;
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
-import uchicago.src.sim.space.Multi2DGrid;
 import uchicago.src.sim.space.Object2DGrid;
 import utils.Task;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Random;
 
-import static java.awt.Color.BLUE;
-
 public class LiftAgent extends Agent implements Drawable {
     private int speed;
-    private Multi2DGrid space;
+    private Object2DGrid space;
     public int x;
     public int y;
 
-    public LiftAgent(int x, int y, int speed, Multi2DGrid space) {
+    public LiftAgent(int x, int y, int speed, Object2DGrid space) {
         this.x = x;
         this.y = y;
         this.speed = speed;
@@ -104,7 +101,7 @@ public class LiftAgent extends Agent implements Drawable {
 
     @Override
     public void draw(SimGraphics simGraphics) {
-        simGraphics.drawFastCircle(BLUE);
+        simGraphics.drawFastCircle(Color.BLUE);
     }
 
     @Override
