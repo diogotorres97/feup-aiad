@@ -34,10 +34,6 @@ public class LiftAgent extends Agent implements Drawable {
         this.space = space;
     }
 
-    public LiftAgent getSelf() {
-        return this;
-    }
-
     @Override
     protected void setup() {
         //Register as a lift so building can later find out about it at runtime
@@ -52,6 +48,7 @@ public class LiftAgent extends Agent implements Drawable {
         } catch(FIPAException fe) {
             fe.printStackTrace();
         }
+        System.out.println("Lift registered!");
         addBehaviour(new FIPAContractNetResp(this, MessageTemplate.MatchPerformative(ACLMessage.CFP)));
     }
 

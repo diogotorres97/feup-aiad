@@ -5,31 +5,29 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
+import jade.core.AID;
 import sajas.core.Agent;
 import sajas.domain.DFService;
 import sajas.proto.ContractNetInitiator;
+import sajas.proto.SubscriptionInitiator;
 import utils.Task;
 import utils.call.CallStrategy;
 import utils.call.MidCallStrategy;
 import utils.call.MorningCallStrategy;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.OptionalInt;
 import java.util.Vector;
-import java.util.function.ToIntFunction;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static java.lang.Integer.MAX_VALUE;
 
 public class BuildingAgent extends Agent {
     private int numFloors;
     private CallStrategy callStrategy;
+    private Vector<AID> lifts;
 
     public BuildingAgent(int numFloors, int callStrategy) {
         this.numFloors = numFloors;
+        this.lifts = new Vector<>();
         switch(callStrategy) {
             case 0:
                 this.callStrategy = new MorningCallStrategy(numFloors);
@@ -42,7 +40,34 @@ public class BuildingAgent extends Agent {
     }
 
     @Override
-    protected void setup() {}
+    protected void setup() {
+        initialLiftAgentSearch();
+        liftAgentSubscription();
+        System.out.println("Setting up building");
+    }
+
+    private void initialLiftAgentSearch() {
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("lift");
+        template.addServices(sd);
+        try {
+            DFAgentDescription[] result = DFService.search(this, template);
+            System.out.println(result.length);
+            for(int i=0; i<result.length; ++i)
+                System.out.println(this.lifts.add(result[i].getName()));
+        } catch(FIPAException fe) {
+            fe.printStackTrace();
+        }
+    }
+
+    private void liftAgentSubscription() {
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("lift");
+        template.addServices(sd);
+        addBehaviour(new DFSubscriptionInit(this, template));
+    }
 
     @Override
     protected void takeDown() {
@@ -57,6 +82,10 @@ public class BuildingAgent extends Agent {
         this.numFloors = numFloors;
     }
 
+    public Vector<AID> getLifts() {
+        return lifts;
+    }
+
     private class FIPAContractNetInit extends ContractNetInitiator {
 
         public FIPAContractNetInit(Agent a, ACLMessage msg) {
@@ -64,21 +93,10 @@ public class BuildingAgent extends Agent {
         }
 
         protected Vector prepareCfps(ACLMessage cfp) {
-            Vector<ACLMessage> v = new Vector<ACLMessage>();
+            Vector<ACLMessage> v = new Vector<>();
 
-            //Could do this only once at setup, but this way more lifts can be incorporated at runtime
-            DFAgentDescription template = new DFAgentDescription();
-            ServiceDescription sd = new ServiceDescription();
-            sd.setType("lift");
-            template.addServices(sd);
-            try {
-                DFAgentDescription[] result = DFService.search(myAgent, template);
-                System.out.println(result.length);
-                for(int i=0; i<result.length; ++i)
-                    cfp.addReceiver(result[i].getName());
-            } catch(FIPAException fe) {
-                fe.printStackTrace();
-            }
+            for(AID aid : ((BuildingAgent)myAgent).getLifts())
+                cfp.addReceiver(aid);
 
             v.add(cfp);
 
@@ -123,6 +141,30 @@ public class BuildingAgent extends Agent {
 
         protected void handleAllResultNotifications(Vector resultNotifications) {
             System.out.println("got " + resultNotifications.size() + " result notifs!");
+        }
+
+    }
+
+    private class DFSubscriptionInit extends SubscriptionInitiator {
+
+        DFSubscriptionInit(Agent agent, DFAgentDescription dfad) {
+            super(agent, DFService.createSubscriptionMessage(agent, getDefaultDF(), dfad, null));
+        }
+
+        protected void handleInform(ACLMessage inform) {
+            try {
+                DFAgentDescription[] dfds = DFService.decodeNotification(inform.getContent());
+                BuildingAgent myBuilding = (BuildingAgent)myAgent;
+                for(int i=0; i<dfds.length; i++) {
+                    AID agent = dfds[i].getName();
+                    if(!myBuilding.getLifts().contains(agent)){
+                        myBuilding.getLifts().add(agent);
+                        System.out.println("New agent in town: " + agent.getLocalName() + ", now have " + myBuilding.getLifts().size());
+                    }
+            }
+            } catch (FIPAException fe) {
+                fe.printStackTrace();
+            }
         }
 
     }
