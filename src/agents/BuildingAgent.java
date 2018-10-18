@@ -10,6 +10,8 @@ import sajas.core.Agent;
 import sajas.domain.DFService;
 import sajas.proto.ContractNetInitiator;
 import sajas.proto.SubscriptionInitiator;
+import uchicago.src.sim.space.Object2DGrid;
+import utils.Floor;
 import utils.Task;
 import utils.call.CallStrategy;
 import utils.call.MidCallStrategy;
@@ -24,10 +26,20 @@ public class BuildingAgent extends Agent {
     private int numFloors;
     private CallStrategy callStrategy;
     private Vector<AID> lifts;
+    private Vector<Floor> floors;
+    private Object2DGrid space;
 
-    public BuildingAgent(int numFloors, int callStrategy) {
+    public BuildingAgent(int numFloors, int callStrategy, Object2DGrid space) {
         this.numFloors = numFloors;
         this.lifts = new Vector<>();
+        this.space = space;
+        this.floors = new Vector<>(numFloors);
+        for(int i = 0; i < numFloors; ++i) {
+            Floor floor = new Floor(0, numFloors - 1 - i);
+            this.floors.add(floor);
+            space.putObjectAt(floor.getX(), floor.getY(), floor);
+        }
+
         switch(callStrategy) {
             case 0:
                 this.callStrategy = new MorningCallStrategy(numFloors);

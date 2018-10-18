@@ -101,7 +101,7 @@ public class LiftAgent extends Agent implements Drawable {
 
     @Override
     public void draw(SimGraphics simGraphics) {
-        simGraphics.drawFastCircle(Color.BLUE);
+        simGraphics.drawRect(Color.BLUE);
     }
 
     @Override

@@ -91,7 +91,7 @@ public class Launcher extends Repast3Launcher {
         // create and store agents
         // create space, data recorders
         agentList = new ArrayList<>();
-        space = new Object2DGrid(NUM_LIFTS, NUM_FLOORS);
+        space = new Object2DGrid(NUM_LIFTS+1, NUM_FLOORS);
 
         launchAgents();
     }
@@ -99,7 +99,7 @@ public class Launcher extends Repast3Launcher {
     private void buildDisplay() {
         // create displays, charts
         Object2DDisplay agentDisplay = new Object2DDisplay(space);
-        agentDisplay.setObjectList(agentList);
+//        agentDisplay.setObjectList(agentList);
 
         dsurf.addDisplayable(agentDisplay, "agents");
         dsurf.setBackground(Color.WHITE);
@@ -123,7 +123,7 @@ public class Launcher extends Repast3Launcher {
                 LiftAgent agent = (LiftAgent)agentList.get(1);
                 space.putObjectAt(agent.getX(), agent.getY(), null);
                 Random rng = new Random(System.currentTimeMillis());
-                agent.y = rng.nextInt(2) + NUM_FLOORS-2;
+                agent.y = rng.nextInt(NUM_FLOORS);
                 space.putObjectAt(agent.getX(), agent.getY(), agent);
             }
         });
@@ -139,7 +139,7 @@ public class Launcher extends Repast3Launcher {
 
     private void launchAgents() {
         for(int i = 0; i < NUM_LIFTS; ++i) {
-            LiftAgent agent = new LiftAgent(i, NUM_FLOORS-1, LIFT_SPEED, space);
+            LiftAgent agent = new LiftAgent(i+1, NUM_FLOORS-1, LIFT_SPEED, space);
             space.putObjectAt(agent.getX(), agent.getY(), agent);
             try {
                 mainContainer.acceptNewAgent("lift"+i, agent).start();
@@ -149,7 +149,7 @@ public class Launcher extends Repast3Launcher {
             agentList.add(agent);
         }
 
-        building = new BuildingAgent(NUM_FLOORS, CALL_STRATEGY);
+        building = new BuildingAgent(NUM_FLOORS, CALL_STRATEGY, space);
         try {
             mainContainer.acceptNewAgent("spy", building).start();
         } catch (StaleProxyException e) {
