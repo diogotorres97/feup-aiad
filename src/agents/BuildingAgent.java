@@ -89,6 +89,7 @@ public class BuildingAgent extends Agent {
 
             System.out.println("got " + responses.size() + " responses!");
 
+            //Get min
             int min = MAX_VALUE;
             for(int i = 0; i < responses.size(); ++i) {
                 int curr = MAX_VALUE;
@@ -101,15 +102,19 @@ public class BuildingAgent extends Agent {
                 if(curr < min) min = curr;
             }
 
+            //Choose first with min value
+            boolean chosen = false;
             for(int i=0; i<responses.size(); i++) {
                 ACLMessage current = (ACLMessage)responses.get(i);
                 try {
-                    if((Integer)current.getContentObject() == min) {
-                        ACLMessage msg = current.createReply();
+                    ACLMessage msg = current.createReply();
+                    if(!chosen && (Integer)current.getContentObject() == min) {
                         msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-                        acceptances.add(msg);
-                        break;
+                        chosen = true;
                     }
+                    else
+                        msg.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                    acceptances.add(msg);
                 } catch (UnreadableException e) {
                     e.printStackTrace();
                 }

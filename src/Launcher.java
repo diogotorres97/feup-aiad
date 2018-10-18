@@ -24,9 +24,10 @@ public class Launcher extends Repast3Launcher {
     public static boolean BATCH_MODE = false;
 
     private int LIFT_MAX_CAPACITY = 6;
-    private int CALL_FREQUENCY = 20;
+    private int CALL_FREQUENCY = 100;
     private int NUM_FLOORS = 5;
     private int NUM_LIFTS = 4;
+    private int LIFT_SPEED = 15;
     private int LIFT_STRATEGY = 0;
     private int CALL_STRATEGY = 0;
 
@@ -46,7 +47,7 @@ public class Launcher extends Repast3Launcher {
 
     @Override
     public String[] getInitParam() {
-        return new String[]{"CALL_STRATEGY", "LIFT_MAX_CAPACITY", "CALL_FREQUENCY", "LIFT_STRATEGY", "NUM_FLOORS", "NUM_LIFTS"};
+        return new String[]{"CALL_FREQUENCY", "CALL_STRATEGY", "LIFT_MAX_CAPACITY", "LIFT_SPEED", "LIFT_STRATEGY", "NUM_FLOORS", "NUM_LIFTS"};
     }
 
     @Override
@@ -115,7 +116,7 @@ public class Launcher extends Repast3Launcher {
             }
         });
         //TODO: Just experimenting, delete later
-        getSchedule().scheduleActionAtInterval(25, new BasicAction() {
+        getSchedule().scheduleActionAtInterval(LIFT_SPEED, new BasicAction() {
             @Override
             public void execute() {
                 LiftAgent agent = (LiftAgent)agentList.get(0);
@@ -137,7 +138,7 @@ public class Launcher extends Repast3Launcher {
 
     private void launchAgents() {
         for(int i = 0; i < NUM_LIFTS; ++i) {
-            LiftAgent agent = new LiftAgent(i, NUM_FLOORS-1, space);
+            LiftAgent agent = new LiftAgent(i, NUM_FLOORS-1, LIFT_SPEED, space);
             space.putObjectAt(agent.getX(), agent.getY(), agent);
             try {
                 mainContainer.acceptNewAgent("lift"+i, agent).start();
@@ -206,5 +207,13 @@ public class Launcher extends Repast3Launcher {
 
     public void setCALL_STRATEGY(int CALL_STRATEGY) {
         this.CALL_STRATEGY = CALL_STRATEGY;
+    }
+
+    public int getLIFT_SPEED() {
+        return LIFT_SPEED;
+    }
+
+    public void setLIFT_SPEED(int LIFT_SPEED) {
+        this.LIFT_SPEED = LIFT_SPEED;
     }
 }

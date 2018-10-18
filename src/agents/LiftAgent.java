@@ -22,13 +22,15 @@ import java.util.Random;
 import static java.awt.Color.BLUE;
 
 public class LiftAgent extends Agent implements Drawable {
+    private int speed;
     private Multi2DGrid space;
     public int x;
     public int y;
 
-    public LiftAgent(int x, int y, Multi2DGrid space) {
+    public LiftAgent(int x, int y, int speed, Multi2DGrid space) {
         this.x = x;
         this.y = y;
+        this.speed = speed;
         this.space = space;
     }
 
