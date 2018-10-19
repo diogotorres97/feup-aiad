@@ -3,7 +3,6 @@ import agents.LiftAgent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.wrapper.StaleProxyException;
-import sajas.core.Agent;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
@@ -18,7 +17,6 @@ import uchicago.src.sim.space.Object2DGrid;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Random;
 
 public class Launcher extends Repast3Launcher {
     public static boolean BATCH_MODE = false;
@@ -35,7 +33,7 @@ public class Launcher extends Repast3Launcher {
 
     private DisplaySurface dsurf;
     private Object2DGrid space;
-    private ArrayList<Agent> agentList;
+    private ArrayList<LiftAgent> agentList;
 
     private BuildingAgent building;
 
@@ -99,7 +97,6 @@ public class Launcher extends Repast3Launcher {
     private void buildDisplay() {
         // create displays, charts
         Object2DDisplay agentDisplay = new Object2DDisplay(space);
-//        agentDisplay.setObjectList(agentList);
 
         dsurf.addDisplayable(agentDisplay, "agents");
         dsurf.setBackground(Color.WHITE);
@@ -108,7 +105,7 @@ public class Launcher extends Repast3Launcher {
     }
 
     private void buildSchedule() {
-        // build the schedule
+        // Build the schedule with actions to be performed on a regular basis
         getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
         getSchedule().scheduleActionAtInterval(CALL_FREQUENCY, new BasicAction() {
             @Override
@@ -116,15 +113,11 @@ public class Launcher extends Repast3Launcher {
                 building.newCall();
             }
         });
-        //TODO: Just experimenting, delete later
         getSchedule().scheduleActionAtInterval(LIFT_SPEED, new BasicAction() {
             @Override
             public void execute() {
-                LiftAgent agent = (LiftAgent)agentList.get(1);
-                space.putObjectAt(agent.getX(), agent.getY(), null);
-                Random rng = new Random(System.currentTimeMillis());
-                agent.y = rng.nextInt(NUM_FLOORS);
-                space.putObjectAt(agent.getX(), agent.getY(), agent);
+                for(LiftAgent agent : agentList)
+                    agent.updatePosition();
             }
         });
     }

@@ -46,12 +46,15 @@ public class LiftAgent extends Agent implements Drawable {
             fe.printStackTrace();
         }
         System.out.println("Lift registered!");
-        addBehaviour(new FIPAContractNetResp(this, MessageTemplate.MatchPerformative(ACLMessage.CFP)));
+        addBehaviour(new CallAnswerer(this, MessageTemplate.MatchPerformative(ACLMessage.CFP)));
     }
 
-    class FIPAContractNetResp extends ContractNetResponder {
+    public void updatePosition() {
+    }
 
-        public FIPAContractNetResp(Agent a, MessageTemplate mt) {
+    class CallAnswerer extends ContractNetResponder {
+
+        public CallAnswerer(Agent a, MessageTemplate mt) {
             super(a, mt);
         }
 

@@ -78,7 +78,7 @@ public class BuildingAgent extends Agent {
         ServiceDescription sd = new ServiceDescription();
         sd.setType("lift");
         template.addServices(sd);
-        addBehaviour(new DFSubscriptionInit(this, template));
+        addBehaviour(new LiftAgentSubscription(this, template));
     }
 
     @Override
@@ -98,9 +98,9 @@ public class BuildingAgent extends Agent {
         return lifts;
     }
 
-    private class FIPAContractNetInit extends ContractNetInitiator {
+    private class CallGenerator extends ContractNetInitiator {
 
-        public FIPAContractNetInit(Agent a, ACLMessage msg) {
+        public CallGenerator(Agent a, ACLMessage msg) {
             super(a, msg);
         }
 
@@ -157,9 +157,9 @@ public class BuildingAgent extends Agent {
 
     }
 
-    private class DFSubscriptionInit extends SubscriptionInitiator {
+    private class LiftAgentSubscription extends SubscriptionInitiator {
 
-        DFSubscriptionInit(Agent agent, DFAgentDescription dfad) {
+        LiftAgentSubscription(Agent agent, DFAgentDescription dfad) {
             super(agent, DFService.createSubscriptionMessage(agent, getDefaultDF(), dfad, null));
         }
 
@@ -184,10 +184,10 @@ public class BuildingAgent extends Agent {
     public void newCall() {
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         try {
-            msg.setContentObject(new Task(callStrategy.generateOriginFloor(), callStrategy.generateDestinationFloor()));
+            msg.setContentObject(callStrategy.generateTask());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        addBehaviour(new FIPAContractNetInit(this, msg));
+        addBehaviour(new CallGenerator(this, msg));
     }
 }
