@@ -59,9 +59,9 @@ public class Launcher extends Repast3Launcher {
 
         // Setup combobox parameter for lift behavior strategy
         Hashtable h1 = new Hashtable();
-        h1.put(new Integer(0), "Traditional");
-        h1.put(new Integer(1), "Closest w/ estimate");
-        h1.put(new Integer(2), "Closest w/o estimate");
+        h1.put(new Integer(0), "Traditional (closest)");
+        h1.put(new Integer(1), "Smallest time (up/down)");
+        h1.put(new Integer(2), "Smallest time (numpad)");
         ListPropertyDescriptor pd1 = new ListPropertyDescriptor("LIFT_STRATEGY", h1);
 
         // Setup combobox parameter for calling behavior strategy
@@ -132,7 +132,7 @@ public class Launcher extends Repast3Launcher {
 
     private void launchAgents() {
         for(int i = 0; i < NUM_LIFTS; ++i) {
-            LiftAgent agent = new LiftAgent(i+1, NUM_FLOORS-1, LIFT_SPEED, space);
+            LiftAgent agent = new LiftAgent(i+1, NUM_FLOORS-1, LIFT_STRATEGY, LIFT_MAX_CAPACITY, space);
             space.putObjectAt(agent.getX(), agent.getY(), agent);
             try {
                 mainContainer.acceptNewAgent("lift"+i, agent).start();
@@ -148,7 +148,6 @@ public class Launcher extends Repast3Launcher {
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
-
     }
 
     /*

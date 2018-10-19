@@ -104,6 +104,7 @@ public class BuildingAgent extends Agent {
             super(a, msg);
         }
 
+        @Override
         protected Vector prepareCfps(ACLMessage cfp) {
             Vector<ACLMessage> v = new Vector<>();
 
@@ -115,6 +116,7 @@ public class BuildingAgent extends Agent {
             return v;
         }
 
+        @Override
         protected void handleAllResponses(Vector responses, Vector acceptances) {
 
             System.out.println("got " + responses.size() + " responses!");
@@ -151,6 +153,7 @@ public class BuildingAgent extends Agent {
             }
         }
 
+        @Override
         protected void handleAllResultNotifications(Vector resultNotifications) {
             System.out.println("got " + resultNotifications.size() + " result notifs!");
         }
@@ -163,6 +166,7 @@ public class BuildingAgent extends Agent {
             super(agent, DFService.createSubscriptionMessage(agent, getDefaultDF(), dfad, null));
         }
 
+        @Override
         protected void handleInform(ACLMessage inform) {
             try {
                 DFAgentDescription[] dfds = DFService.decodeNotification(inform.getContent());
