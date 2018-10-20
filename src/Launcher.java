@@ -73,8 +73,8 @@ public class Launcher extends Repast3Launcher {
         descriptors.put("LIFT_STRATEGY", pd1);
         descriptors.put("CALL_STRATEGY", pd2);
 
-        if(dsurf != null) dsurf.dispose();
-        dsurf = new DisplaySurface(this,"Lift Management");
+        if (dsurf != null) dsurf.dispose();
+        dsurf = new DisplaySurface(this, "Lift Management");
         registerDisplaySurface("Lift Management", dsurf);
     }
 
@@ -89,7 +89,7 @@ public class Launcher extends Repast3Launcher {
         // create and store agents
         // create space, data recorders
         agentList = new ArrayList<>();
-        space = new Object2DGrid(NUM_LIFTS+1, NUM_FLOORS);
+        space = new Object2DGrid(NUM_LIFTS + 1, NUM_FLOORS);
 
         launchAgents();
     }
@@ -116,7 +116,7 @@ public class Launcher extends Repast3Launcher {
         getSchedule().scheduleActionAtInterval(LIFT_SPEED, new BasicAction() {
             @Override
             public void execute() {
-                for(LiftAgent agent : agentList)
+                for (LiftAgent agent : agentList)
                     agent.updatePosition();
             }
         });
@@ -131,11 +131,11 @@ public class Launcher extends Repast3Launcher {
     }
 
     private void launchAgents() {
-        for(int i = 0; i < NUM_LIFTS; ++i) {
-            LiftAgent agent = new LiftAgent(i+1, NUM_FLOORS-1, LIFT_STRATEGY, LIFT_MAX_CAPACITY, space);
+        for (int i = 0; i < NUM_LIFTS; ++i) {
+            LiftAgent agent = new LiftAgent(i + 1, NUM_FLOORS - 1, LIFT_STRATEGY, LIFT_MAX_CAPACITY, space);
             space.putObjectAt(agent.getX(), agent.getY(), agent);
             try {
-                mainContainer.acceptNewAgent("lift"+i, agent).start();
+                mainContainer.acceptNewAgent("lift" + i, agent).start();
             } catch (StaleProxyException e) {
                 e.printStackTrace();
             }
