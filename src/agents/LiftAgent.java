@@ -20,21 +20,20 @@ import utils.evaluation.SmallestTimeNumpad;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Random;
 
 public class LiftAgent extends Agent implements Drawable {
+    public int x;
+    public int y;
     private Object2DGrid space;
     private int max_capacity;
     private CallEvaluation evaluator;
-    public int x;
-    public int y;
 
     public LiftAgent(int x, int y, int strategy, int max_capacity, Object2DGrid space) {
         this.x = x;
         this.y = y;
         this.space = space;
         this.max_capacity = max_capacity;
-        switch(strategy) {
+        switch (strategy) {
             case 0:
                 this.evaluator = new Closest(this);
                 break;
@@ -58,7 +57,7 @@ public class LiftAgent extends Agent implements Drawable {
         dfd.addServices(sd);
         try {
             DFService.register(this, dfd);
-        } catch(FIPAException fe) {
+        } catch (FIPAException fe) {
             fe.printStackTrace();
         }
         System.out.println("Lift registered!");
@@ -66,6 +65,30 @@ public class LiftAgent extends Agent implements Drawable {
     }
 
     public void updatePosition() {
+    }
+
+    @Override
+    protected void takeDown() {
+        try {
+            DFService.deregister(this);
+        } catch (FIPAException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void draw(SimGraphics simGraphics) {
+        simGraphics.drawRect(Color.BLUE);
+    }
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
     }
 
     class CallAnswerer extends ContractNetResponder {
@@ -79,7 +102,7 @@ public class LiftAgent extends Agent implements Drawable {
         protected ACLMessage handleCfp(ACLMessage cfp) {
             Task task = null;
             try {
-                task = (Task)cfp.getContentObject();
+                task = (Task) cfp.getContentObject();
             } catch (UnreadableException e) {
                 e.printStackTrace();
             }
@@ -109,29 +132,5 @@ public class LiftAgent extends Agent implements Drawable {
             return result;
         }
 
-    }
-
-    @Override
-    protected void takeDown() {
-        try {
-            DFService.deregister(this);
-        } catch(FIPAException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void draw(SimGraphics simGraphics) {
-        simGraphics.drawRect(Color.BLUE);
-    }
-
-    @Override
-    public int getX() {
-        return x;
-    }
-
-    @Override
-    public int getY() {
-        return y;
     }
 }

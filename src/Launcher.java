@@ -58,23 +58,23 @@ public class Launcher extends Repast3Launcher {
         super.setup();
 
         // Setup combobox parameter for lift behavior strategy
-        Hashtable h1 = new Hashtable();
-        h1.put(new Integer(0), "Traditional (closest)");
-        h1.put(new Integer(1), "Smallest time (up/down)");
-        h1.put(new Integer(2), "Smallest time (numpad)");
+        Hashtable<Integer, String> h1 = new Hashtable<>();
+        h1.put(0, "Traditional (closest)");
+        h1.put(1, "Smallest time (up/down)");
+        h1.put(2, "Smallest time (numpad)");
         ListPropertyDescriptor pd1 = new ListPropertyDescriptor("LIFT_STRATEGY", h1);
 
         // Setup combobox parameter for calling behavior strategy
-        Hashtable h2 = new Hashtable();
-        h2.put(new Integer(0), "Morning traffic");
-        h2.put(new Integer(1), "Mid-day traffic");
+        Hashtable<Integer, String> h2 = new Hashtable<>();
+        h2.put(0, "Morning traffic");
+        h2.put(1, "Mid-day traffic");
         ListPropertyDescriptor pd2 = new ListPropertyDescriptor("CALL_STRATEGY", h2);
 
         descriptors.put("LIFT_STRATEGY", pd1);
         descriptors.put("CALL_STRATEGY", pd2);
 
-        if(dsurf != null) dsurf.dispose();
-        dsurf = new DisplaySurface(this,"Lift Management");
+        if (dsurf != null) dsurf.dispose();
+        dsurf = new DisplaySurface(this, "Lift Management");
         registerDisplaySurface("Lift Management", dsurf);
     }
 
@@ -89,7 +89,7 @@ public class Launcher extends Repast3Launcher {
         // create and store agents
         // create space, data recorders
         agentList = new ArrayList<>();
-        space = new Object2DGrid(NUM_LIFTS+1, NUM_FLOORS);
+        space = new Object2DGrid(NUM_LIFTS + 1, NUM_FLOORS);
 
         launchAgents();
     }
@@ -116,7 +116,7 @@ public class Launcher extends Repast3Launcher {
         getSchedule().scheduleActionAtInterval(LIFT_SPEED, new BasicAction() {
             @Override
             public void execute() {
-                for(LiftAgent agent : agentList)
+                for (LiftAgent agent : agentList)
                     agent.updatePosition();
             }
         });
@@ -131,11 +131,11 @@ public class Launcher extends Repast3Launcher {
     }
 
     private void launchAgents() {
-        for(int i = 0; i < NUM_LIFTS; ++i) {
-            LiftAgent agent = new LiftAgent(i+1, NUM_FLOORS-1, LIFT_STRATEGY, LIFT_MAX_CAPACITY, space);
+        for (int i = 0; i < NUM_LIFTS; ++i) {
+            LiftAgent agent = new LiftAgent(i + 1, NUM_FLOORS - 1, LIFT_STRATEGY, LIFT_MAX_CAPACITY, space);
             space.putObjectAt(agent.getX(), agent.getY(), agent);
             try {
-                mainContainer.acceptNewAgent("lift"+i, agent).start();
+                mainContainer.acceptNewAgent("lift" + i, agent).start();
             } catch (StaleProxyException e) {
                 e.printStackTrace();
             }
