@@ -59,10 +59,7 @@ public class BuildingAgent extends Agent {
     }
 
     private void initialLiftAgentSearch() {
-        DFAgentDescription template = new DFAgentDescription();
-        ServiceDescription sd = new ServiceDescription();
-        sd.setType("lift");
-        template.addServices(sd);
+        DFAgentDescription template = getDFAgentDescriptionTemplate();
         try {
             DFAgentDescription[] result = DFService.search(this, template);
             System.out.println(result.length);
@@ -74,11 +71,16 @@ public class BuildingAgent extends Agent {
     }
 
     private void liftAgentSubscription() {
+        DFAgentDescription template = getDFAgentDescriptionTemplate();
+        addBehaviour(new LiftAgentSubscription(this, template));
+    }
+
+    private DFAgentDescription getDFAgentDescriptionTemplate() {
         DFAgentDescription template = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
         sd.setType("lift");
         template.addServices(sd);
-        addBehaviour(new LiftAgentSubscription(this, template));
+        return template;
     }
 
     @Override

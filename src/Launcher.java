@@ -58,16 +58,16 @@ public class Launcher extends Repast3Launcher {
         super.setup();
 
         // Setup combobox parameter for lift behavior strategy
-        Hashtable h1 = new Hashtable();
-        h1.put(new Integer(0), "Traditional (closest)");
-        h1.put(new Integer(1), "Smallest time (up/down)");
-        h1.put(new Integer(2), "Smallest time (numpad)");
+        Hashtable<Integer, String> h1 = new Hashtable<>();
+        h1.put(0, "Traditional (closest)");
+        h1.put(1, "Smallest time (up/down)");
+        h1.put(2, "Smallest time (numpad)");
         ListPropertyDescriptor pd1 = new ListPropertyDescriptor("LIFT_STRATEGY", h1);
 
         // Setup combobox parameter for calling behavior strategy
-        Hashtable h2 = new Hashtable();
-        h2.put(new Integer(0), "Morning traffic");
-        h2.put(new Integer(1), "Mid-day traffic");
+        Hashtable<Integer, String> h2 = new Hashtable<>();
+        h2.put(0, "Morning traffic");
+        h2.put(1, "Mid-day traffic");
         ListPropertyDescriptor pd2 = new ListPropertyDescriptor("CALL_STRATEGY", h2);
 
         descriptors.put("LIFT_STRATEGY", pd1);
