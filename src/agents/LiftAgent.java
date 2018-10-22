@@ -66,24 +66,22 @@ public class LiftAgent extends Agent implements Drawable {
         } catch (FIPAException fe) {
             fe.printStackTrace();
         }
-        System.out.println("Lift registered!");
+        //System.out.println("Lift registered!");
         addBehaviour(new CallAnswerer(this, MessageTemplate.MatchPerformative(ACLMessage.CFP)));
     }
 
     public void updatePosition() {
         space.putObjectAt(getX(), getY(), null);
 
-        if (state == Direction.UP && y >= 0) {
+        if (state == Direction.UP && y >= 0)
             y--;
-        }
-        else if (state == Direction.DOWN && y < space.getSizeY()) {
+        else if (state == Direction.DOWN && y < space.getSizeY())
             y++;
-        }
 
         space.putObjectAt(getX(), getY(), this);
     }
 
-    private int getCurrentFloor() {
+    public int getCurrentFloor() {
         return space.getSizeY() - y - 1;
     }
 

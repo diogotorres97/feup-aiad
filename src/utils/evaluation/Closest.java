@@ -11,6 +11,6 @@ public class Closest extends CallEvaluation {
 
     @Override
     public int evaluate(Task task) {
-        return 0;
+        return Math.abs(agent.getCurrentFloor() - task.getOriginFloor());
     }
 }
