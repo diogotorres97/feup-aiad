@@ -12,6 +12,7 @@ import sajas.proto.ContractNetInitiator;
 import sajas.proto.SubscriptionInitiator;
 import uchicago.src.sim.space.Object2DGrid;
 import utils.Floor;
+import utils.Task;
 import utils.call.CallStrategy;
 import utils.call.MidCallStrategy;
 import utils.call.MorningCallStrategy;
@@ -100,12 +101,18 @@ public class BuildingAgent extends Agent {
     }
 
     public void newCall() {
+        Task task = callStrategy.generateTask();
+        newCall(task);
+    }
+
+    public void newCall(Task task) {
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         try {
-            msg.setContentObject(callStrategy.generateTask());
+            msg.setContentObject(task);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        floors.get(task.getOriginFloor()).activate();
         addBehaviour(new CallGenerator(this, msg));
     }
 
@@ -130,7 +137,7 @@ public class BuildingAgent extends Agent {
         @Override
         protected void handleAllResponses(Vector responses, Vector acceptances) {
 
-            System.out.println("got " + responses.size() + " responses!");
+            //System.out.println("got " + responses.size() + " responses!");
 
             //Get min
             int min = MAX_VALUE;
@@ -165,7 +172,7 @@ public class BuildingAgent extends Agent {
 
         @Override
         protected void handleAllResultNotifications(Vector resultNotifications) {
-            System.out.println("got " + resultNotifications.size() + " result notifs!");
+            //System.out.println("got " + resultNotifications.size() + " result notifs!");
         }
 
     }

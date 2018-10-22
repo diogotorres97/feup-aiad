@@ -2,6 +2,7 @@ package utils.call;
 
 import utils.Task;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class CallStrategy {
@@ -38,6 +39,11 @@ public abstract class CallStrategy {
             destination = generateDestinationFloor();
         } while (destination == origin);
 
-        return new Task(origin, destination);
+        ArrayList<Integer> destinations = new ArrayList<>();
+        destinations.add(destination);
+        ArrayList<Integer> numPeople = new ArrayList<>();
+        numPeople.add(1);
+
+        return new Task(origin, destinations, numPeople);
     }
 }

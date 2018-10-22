@@ -8,6 +8,7 @@ import java.awt.*;
 public class Floor implements Drawable {
     private int x;
     private int y;
+    private int counter = 0;
 
     public Floor(int x, int y) {
         this.x = x;
@@ -16,7 +17,12 @@ public class Floor implements Drawable {
 
     @Override
     public void draw(SimGraphics simGraphics) {
-        simGraphics.drawRect(Color.RED);
+        if(counter > 0) {
+            simGraphics.drawRect(Color.GREEN);
+            counter = (counter + 1) % 15;
+        }
+        else
+            simGraphics.drawRect(Color.RED);
     }
 
     @Override
@@ -27,5 +33,9 @@ public class Floor implements Drawable {
     @Override
     public int getY() {
         return y;
+    }
+
+    public void activate() {
+        counter++;
     }
 }

@@ -12,6 +12,7 @@ import sajas.proto.ContractNetResponder;
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
 import uchicago.src.sim.space.Object2DGrid;
+import utils.Direction;
 import utils.Task;
 import utils.evaluation.CallEvaluation;
 import utils.evaluation.Closest;
@@ -20,6 +21,7 @@ import utils.evaluation.SmallestTimeNumpad;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class LiftAgent extends Agent implements Drawable {
     public int x;
@@ -27,6 +29,10 @@ public class LiftAgent extends Agent implements Drawable {
     private Object2DGrid space;
     private int max_capacity;
     private CallEvaluation evaluator;
+    private ArrayList<Task> tasks = new ArrayList<>();
+    private Task currentTask = null;
+    private boolean goingToOrigin = false;
+    private Direction state = Direction.STOPPED;
 
     public LiftAgent(int x, int y, int strategy, int max_capacity, Object2DGrid space) {
         this.x = x;
@@ -65,6 +71,20 @@ public class LiftAgent extends Agent implements Drawable {
     }
 
     public void updatePosition() {
+        space.putObjectAt(getX(), getY(), null);
+
+        if (state == Direction.UP && y >= 0) {
+            y--;
+        }
+        else if (state == Direction.DOWN && y < space.getSizeY()) {
+            y++;
+        }
+
+        space.putObjectAt(getX(), getY(), this);
+    }
+
+    private int getCurrentFloor() {
+        return space.getSizeY() - y - 1;
     }
 
     @Override
@@ -91,6 +111,79 @@ public class LiftAgent extends Agent implements Drawable {
         return y;
     }
 
+    public Task executeTasks() {
+        Task doneTask = null;
+        if (tasks.size() > 0) {
+            if (currentTask == null) {
+                currentTask = tasks.get(0);
+                goingToOrigin = true;
+            }
+
+            if (goingToOrigin) {
+                state = findState(currentTask);
+                // Check if the lift got to the origin floor
+                if (currentTask.getOriginFloor() == getCurrentFloor()) {
+                    // Send new request if not all people got in
+                    if (currentTask.getNumAllPeople() > max_capacity) {
+                        System.out.println("Insufficient capacity for " + currentTask +  ", making new request");
+                        if (currentTask.getNumPeople() > max_capacity)
+                            currentTask.setNumPeople(currentTask.getNumPeople() - max_capacity);
+                        else {
+                            // everyone from the first call got on the lift, make new call for the rest
+                            doneTask = currentTask;
+                            doneTask.removeNumPeople();
+                            doneTask.removeDestinationFloor();
+                        }
+                    }
+                    else
+                        currentTask.setNumPeople(0);
+                    if (doneTask == null)
+                        doneTask = currentTask;
+                }
+            }
+            else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
+                System.out.println(getLocalName() + " answered " + currentTask);
+                if (currentTask.getNumPeople() == 0 && currentTask.getDestinations().size() > 1) {
+                    currentTask.removeDestinationFloor();
+                    if (currentTask.getNumPeopleSize() > 1)
+                        currentTask.removeNumPeople();
+                }
+                else {
+                    tasks.remove(0);
+                    if (tasks.size() > 0) {
+                        currentTask = tasks.get(0);
+                        goingToOrigin = true;
+                        state = findState(currentTask);
+                    }
+                    else {
+                        state = Direction.STOPPED;
+                        goingToOrigin = false;
+                        currentTask = null;
+                    }
+                }
+            }
+        }
+        else {
+            state = Direction.STOPPED;
+            goingToOrigin = false;
+            currentTask = null;
+        }
+        return doneTask;
+    }
+
+    private Direction findState(Task task) {
+        Direction state = null;
+        if (getCurrentFloor() < task.getOriginFloor())
+            state = Direction.UP;
+        else if (getCurrentFloor() > task.getOriginFloor())
+            state = Direction.DOWN;
+        else {
+            state = task.getDirection();
+            goingToOrigin = false;
+        }
+        return state;
+    }
+
     class CallAnswerer extends ContractNetResponder {
 
         public CallAnswerer(Agent a, MessageTemplate mt) {
@@ -106,7 +199,7 @@ public class LiftAgent extends Agent implements Drawable {
             } catch (UnreadableException e) {
                 e.printStackTrace();
             }
-            System.out.println(getLocalName() + " got request for task: " + task.getOriginFloor() + "|" + task.getDestinationFloor());
+            //System.out.println(getLocalName() + " got request for task: " + task.getOriginFloor() + "|" + task.getDestinationFloor());
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
             try {
@@ -119,12 +212,20 @@ public class LiftAgent extends Agent implements Drawable {
 
         @Override
         protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
-            System.out.println(myAgent.getLocalName() + " got a reject...");
+            //System.out.println(myAgent.getLocalName() + " got a reject...");
         }
 
         @Override
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
             System.out.println(myAgent.getLocalName() + " got an accept!");
+            try {
+                Task task = (Task)cfp.getContentObject();
+                tasks.add(task);
+            } catch (UnreadableException e) {
+                e.printStackTrace();
+            }
+
+            //TODO: Inform now?? Can't afford (?) to wait for task to end
             ACLMessage result = accept.createReply();
             result.setPerformative(ACLMessage.INFORM);
             result.setContent("this is the result");
