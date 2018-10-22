@@ -8,13 +8,12 @@ public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int originFloor;
+
     private ArrayList<Integer> destinationFloor;
     private ArrayList<Integer> numPeople;
     private Direction direction;
     boolean done;
     private int numCalls;
-
-    private double callTime;
 
     public Task(int originFloor, ArrayList<Integer> destinationFloor, ArrayList<Integer> numPeople) {
         this.originFloor = originFloor;
@@ -95,13 +94,5 @@ public class Task implements Serializable {
 
     public int getNumCalls() {
         return numCalls;
-    }
-
-    public double getCallTime() {
-        return callTime;
-    }
-
-    public void setCallTime(double waitTime) {
-        this.callTime = waitTime;
     }
 }

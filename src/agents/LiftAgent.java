@@ -110,6 +110,7 @@ public class LiftAgent extends Agent implements Drawable {
     }
 
     public void addTask(Task task) {
+        //If possible, join task with other tasks with same origin and same destination direction
         for (Task t : tasks) {
             if (t.getOriginFloor() == task.getOriginFloor() && t.getDirection() == task.getDirection()) {
                 if (t != currentTask || goingToOrigin) {

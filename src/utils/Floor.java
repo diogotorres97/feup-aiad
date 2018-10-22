@@ -20,7 +20,7 @@ public class Floor implements Drawable {
         //TODO: Generalize this better
         if(counter > 0) {
             simGraphics.drawRect(Color.GREEN);
-            counter = (counter + 1) % 15;
+            counter = (counter + 1) % 15; //For later reference: 15 = LIFT_VELOCITY
         }
         else
             simGraphics.drawRect(Color.RED);
