@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class LiftAgent extends Agent implements Drawable {
-    public int x;
-    public int y;
+    private int x;
+    private int y;
     private Object2DGrid space;
     private int max_capacity;
     private CallEvaluation evaluator;
@@ -109,68 +109,87 @@ public class LiftAgent extends Agent implements Drawable {
         return y;
     }
 
-    public Task executeTasks() {
-        Task doneTask = null;
-        if (tasks.size() > 0) {
-            if (currentTask == null) {
-                currentTask = tasks.get(0);
-                goingToOrigin = true;
-            }
-
-            if (goingToOrigin) {
-                state = findState(currentTask);
-                // Check if the lift got to the origin floor
-                if (currentTask.getOriginFloor() == getCurrentFloor()) {
-                    // Send new request if not all people got in
-                    if (currentTask.getNumAllPeople() > max_capacity) {
-                        System.out.println("Insufficient capacity for " + currentTask +  ", making new request");
-                        if (currentTask.getNumPeople() > max_capacity)
-                            currentTask.setNumPeople(currentTask.getNumPeople() - max_capacity);
-                        else {
-                            // everyone from the first call got on the lift, make new call for the rest
-                            doneTask = currentTask;
-                            doneTask.removeNumPeople();
-                            doneTask.removeDestinationFloor();
-                        }
+    public void addTask(Task task) {
+        for (Task t : tasks) {
+            if (t.getOriginFloor() == task.getOriginFloor() && t.getDirection() == task.getDirection()) {
+                if (t != currentTask || goingToOrigin) {
+                    System.out.println(getLocalName() + " joined tasks: " + t + " and " + task);
+                    if (t.getDestinationFloor() != task.getDestinationFloor()) {
+                        t.addNumPeople(task.getNumPeople());
+                        t.addDestinationFloor(task.getDestinationFloor());
+                        t.incrementNumCalls();
                     }
                     else
-                        currentTask.setNumPeople(0);
-                    if (doneTask == null)
-                        doneTask = currentTask;
-                }
-            }
-            else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
-                System.out.println(getLocalName() + " answered " + currentTask);
-                if (currentTask.getNumPeople() == 0 && currentTask.getDestinations().size() > 1) {
-                    currentTask.removeDestinationFloor();
-                    if (currentTask.getNumPeopleSize() > 1)
-                        currentTask.removeNumPeople();
-                }
-                else {
-                    tasks.remove(0);
-                    if (tasks.size() > 0) {
-                        currentTask = tasks.get(0);
-                        goingToOrigin = true;
-                        state = findState(currentTask);
-                    }
-                    else {
-                        state = Direction.STOPPED;
-                        goingToOrigin = false;
-                        currentTask = null;
-                    }
+                        t.setNumPeople(t.getNumPeople() + task.getNumPeople());
+                    return;
                 }
             }
         }
-        else {
+
+        tasks.add(task);
+    }
+
+    public Task executeTasks() {
+        if (tasks.isEmpty()) {
             state = Direction.STOPPED;
             goingToOrigin = false;
             currentTask = null;
+            return null;
+        }
+
+        Task doneTask = null;
+        if (currentTask == null) {
+            currentTask = tasks.get(0);
+            goingToOrigin = true;
+        }
+
+        if (goingToOrigin) {
+            findState(currentTask);
+            // Check if the lift got to the origin floor
+            if (currentTask.getOriginFloor() == getCurrentFloor()) {
+                // Send new request if not all people got in
+                if (currentTask.getNumAllPeople() > max_capacity) {
+                    System.out.println("Insufficient capacity for " + currentTask +  ", making new request");
+                    if (currentTask.getNumPeople() > max_capacity)
+                        currentTask.setNumPeople(currentTask.getNumPeople() - max_capacity);
+                    else {
+                        // everyone from the first call got on the lift, make new call for the rest
+                        doneTask = currentTask;
+                        doneTask.removeNumPeople();
+                        doneTask.removeDestinationFloor();
+                    }
+                }
+                else
+                    currentTask.setNumPeople(0);
+                if (doneTask == null)
+                    doneTask = currentTask;
+            }
+        }
+        else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
+            System.out.println(getLocalName() + " answered " + currentTask);
+            if (currentTask.getNumPeople() == 0 && currentTask.getDestinations().size() > 1) {
+                currentTask.removeDestinationFloor();
+                if (currentTask.getNumPeopleSize() > 1)
+                    currentTask.removeNumPeople();
+            }
+            else {
+                tasks.remove(0);
+                if (tasks.size() > 0) {
+                    currentTask = tasks.get(0);
+                    goingToOrigin = true;
+                    findState(currentTask);
+                }
+                else {
+                    state = Direction.STOPPED;
+                    goingToOrigin = false;
+                    currentTask = null;
+                }
+            }
         }
         return doneTask;
     }
 
-    private Direction findState(Task task) {
-        Direction state = null;
+    private void findState(Task task) {
         if (getCurrentFloor() < task.getOriginFloor())
             state = Direction.UP;
         else if (getCurrentFloor() > task.getOriginFloor())
@@ -179,12 +198,11 @@ public class LiftAgent extends Agent implements Drawable {
             state = task.getDirection();
             goingToOrigin = false;
         }
-        return state;
     }
 
     class CallAnswerer extends ContractNetResponder {
 
-        public CallAnswerer(Agent a, MessageTemplate mt) {
+        CallAnswerer(Agent a, MessageTemplate mt) {
             super(a, mt);
         }
 
@@ -218,7 +236,7 @@ public class LiftAgent extends Agent implements Drawable {
             System.out.println(myAgent.getLocalName() + " got an accept!");
             try {
                 Task task = (Task)cfp.getContentObject();
-                tasks.add(task);
+                addTask(task);
             } catch (UnreadableException e) {
                 e.printStackTrace();
             }

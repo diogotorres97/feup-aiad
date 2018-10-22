@@ -17,6 +17,7 @@ public class Floor implements Drawable {
 
     @Override
     public void draw(SimGraphics simGraphics) {
+        //TODO: Generalize this better
         if(counter > 0) {
             simGraphics.drawRect(Color.GREEN);
             counter = (counter + 1) % 15;
