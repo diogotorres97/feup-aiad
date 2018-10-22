@@ -10,24 +10,23 @@ public class Task implements Serializable {
     private int originFloor;
     private ArrayList<Integer> destinationFloors;
     private ArrayList<Integer> numPeople;
-    private Direction direction;
     private int numCalls;
 
-    public Task(int originFloor, int destinationFloor, ArrayList<Integer> numPeople) {
+    public Task(int originFloor, int destinationFloor) {
         this.originFloor = originFloor;
         this.destinationFloors = new ArrayList<>();
         this.destinationFloors.add(destinationFloor);
-        this.numPeople = numPeople;
+        this.numPeople = new ArrayList<>();
+        this.numPeople.add(1);
         this.numCalls = 1;
-        this.direction = (originFloor < destinationFloor ? Direction.UP : Direction.DOWN);
     }
 
     public String toString() {
-        return originFloor + " " + destinationFloors + " " + numPeople +  " " + direction;
+        return originFloor + " " + destinationFloors + " " + numPeople +  " " + getDirection();
     }
 
     public Direction getDirection() {
-        return direction;
+        return originFloor < getDestinationFloor() ? Direction.UP : Direction.DOWN;
     }
 
     public int getOriginFloor() {
@@ -53,7 +52,7 @@ public class Task implements Serializable {
     public void addDestinationFloor(int destinationFloor) {
         this.destinationFloors.add(destinationFloor);
         Collections.sort(this.destinationFloors);
-        if (direction == Direction.DOWN)
+        if (getDirection() == Direction.DOWN)
             Collections.reverse(this.destinationFloors);
     }
 
@@ -74,8 +73,7 @@ public class Task implements Serializable {
 
     public int getNumAllPeople() {
         int sum = 0;
-        for (int i = 0; i < numPeople.size(); i++)
-            sum += numPeople.get(i);
+        for (Integer aNumPeople : numPeople) sum += aNumPeople;
         return sum;
     }
 
@@ -85,5 +83,9 @@ public class Task implements Serializable {
 
     public int getNumCalls() {
         return numCalls;
+    }
+
+    public boolean similarTo(Task t) {
+        return t.getOriginFloor() == getOriginFloor() && getDirection() == getDirection();
     }
 }

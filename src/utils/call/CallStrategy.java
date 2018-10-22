@@ -39,9 +39,6 @@ public abstract class CallStrategy {
             destination = generateDestinationFloor();
         } while (destination == origin);
 
-        ArrayList<Integer> numPeople = new ArrayList<>();
-        numPeople.add(1);
-
-        return new Task(origin, destination, numPeople);
+        return new Task(origin, destination);
     }
 }

@@ -112,18 +112,17 @@ public class LiftAgent extends Agent implements Drawable {
     public void addTask(Task task) {
         //If possible, join task with other tasks with same origin and same destination direction
         for (Task t : tasks) {
-            if (t.getOriginFloor() == task.getOriginFloor() && t.getDirection() == task.getDirection()) {
-                if (t != currentTask || goingToOrigin) {
-                    System.out.println(getLocalName() + " joined tasks: " + t + " and " + task);
-                    if (t.getDestinationFloor() != task.getDestinationFloor()) {
-                        t.addNumPeople(task.getNumPeople());
-                        t.addDestinationFloor(task.getDestinationFloor());
-                        t.incrementNumCalls();
-                    }
-                    else
-                        t.setNumPeople(t.getNumPeople() + task.getNumPeople());
-                    return;
+            if (!task.similarTo(t)) continue;
+            if (t != currentTask || goingToOrigin) {
+                System.out.println(getLocalName() + " joined tasks: " + t + " and " + task);
+                if (t.getDestinationFloor() != task.getDestinationFloor()) {
+                    t.addNumPeople(task.getNumPeople());
+                    t.addDestinationFloor(task.getDestinationFloor());
+                    t.incrementNumCalls();
                 }
+                else
+                    t.setNumPeople(t.getNumPeople() + task.getNumPeople());
+                return;
             }
         }
 
