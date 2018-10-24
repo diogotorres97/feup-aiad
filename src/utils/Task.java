@@ -1,28 +1,27 @@
 package utils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int originFloor;
-    private ArrayList<Integer> destinationFloors;
-    private ArrayList<Integer> numPeople;
+    private TreeMap<Integer, Integer> destFloorPeople; //Key = destination floor, Value = nr. of people to drop off
     private int numCalls;
 
     public Task(int originFloor, int destinationFloor) {
         this.originFloor = originFloor;
-        this.destinationFloors = new ArrayList<>();
-        this.destinationFloors.add(destinationFloor);
-        this.numPeople = new ArrayList<>();
-        this.numPeople.add(1);
+        if(originFloor < destinationFloor)
+            this.destFloorPeople = new TreeMap<>();
+        else
+            this.destFloorPeople = new TreeMap<>(Collections.reverseOrder());
+        this.destFloorPeople.put(destinationFloor, 1);
         this.numCalls = 1;
     }
 
     public String toString() {
-        return originFloor + " " + destinationFloors + " " + numPeople +  " " + getDirection();
+        return originFloor + " " + destFloorPeople.keySet() + " " + destFloorPeople.values() +  " " + getDirection();
     }
 
     public Direction getDirection() {
@@ -34,46 +33,42 @@ public class Task implements Serializable {
     }
 
     public int getDestinationFloor() {
-        return destinationFloors.get(0);
+        return destFloorPeople.firstKey();
     }
 
     public void removeDestinationFloor() {
-        destinationFloors.remove(0);
+        destFloorPeople.remove(destFloorPeople.firstKey());
     }
 
     public ArrayList<Integer> getDestinations() {
-        return destinationFloors;
+        return new ArrayList<>(destFloorPeople.keySet());
     }
 
     public int getNumPeopleSize() {
-        return numPeople.size();
+        return destFloorPeople.size();
     }
 
-    public void addDestinationFloor(int destinationFloor) {
-        this.destinationFloors.add(destinationFloor);
-        Collections.sort(this.destinationFloors);
-        if (getDirection() == Direction.DOWN)
-            Collections.reverse(this.destinationFloors);
+    public void addDestinationFloor(int destinationFloor, int numPeople) {
+        destFloorPeople.put(destinationFloor, numPeople);
     }
 
     public void removeNumPeople() {
-        numPeople.remove(0);
+        //TODO: Delete? (Already done in removeDestinationFloor)
     }
 
     public void setNumPeople(int numPeople) {
-        this.numPeople.set(0, numPeople);
+        destFloorPeople.put(destFloorPeople.firstKey(), numPeople);
     }
 
     public void addNumPeople(int numPeople) {
-        this.numPeople.add(numPeople);
+        //TODO: Delete? (Already done in addDestinationFloor)
     }
     public int getNumPeople() {
-        return numPeople.get(0);
+        return destFloorPeople.get(destFloorPeople.firstKey());
     }
 
     public int getNumAllPeople() {
-        int sum = 0;
-        for (Integer aNumPeople : numPeople) sum += aNumPeople;
+        int sum = destFloorPeople.values().stream().mapToInt(aNumPeople -> aNumPeople).sum();
         return sum;
     }
 
