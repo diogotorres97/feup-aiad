@@ -180,7 +180,7 @@ public class LiftAgent extends Agent implements Drawable {
                 currentTask.setNumPeople(max_capacity); //Number of people that i can transport
                 futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
                 currentTask.removeTail(); //remove the rest of destinations of current task
-            } else { 
+            } else {
                 // everyone from the first destination got on the lift, make new call for the rest
                 int numberOfPeople = currentTask.getNumPeople();
                 futureTask.removeDestinationFloor();
@@ -196,7 +196,9 @@ public class LiftAgent extends Agent implements Drawable {
                         } else {
                             futureTaskDestMap.remove(key);
                         }
+                        break;
                     } else {
+                        numberOfPeople += futureTaskDestMap.get(key);
                         currentTask.addDestinationFloor(key, futureTaskDestMap.get(key));
                         futureTaskDestMap.remove(key);
                     }
