@@ -46,20 +46,12 @@ public class Task implements Serializable {
         return new ArrayList<>(destFloorPeople.keySet());
     }
 
-    public int getNumPeopleSize() {
+    public int getdestFloorPeopleSize() {
         return destFloorPeople.size();
     }
 
     public void addDestinationFloor(int destinationFloor, int numPeople) {
         destFloorPeople.put(destinationFloor, numPeople);
-    }
-
-    public void removeNumPeople() {
-        //TODO: Delete? (Already done in removeDestinationFloor)
-    }
-
-    public void addNumPeople(int numPeople) {
-        //TODO: Delete? (Already done in addDestinationFloor)
     }
 
     public int getNumPeople() {
@@ -71,8 +63,7 @@ public class Task implements Serializable {
     }
 
     public int getNumAllPeople() {
-        int sum = destFloorPeople.values().stream().mapToInt(aNumPeople -> aNumPeople).sum();
-        return sum;
+        return destFloorPeople.values().stream().mapToInt(aNumPeople -> aNumPeople).sum(); //Test this
     }
 
     public void incrementNumCalls() {

@@ -116,11 +116,11 @@ public class LiftAgent extends Agent implements Drawable {
             if (t != currentTask && goingToOrigin) {
                 System.out.println(getLocalName() + " joined tasks: " + t + " and " + task);
                 if (t.getDestinationFloor() != task.getDestinationFloor()) {
-                    t.addNumPeople(task.getNumPeople());
                     t.addDestinationFloor(task.getDestinationFloor(), task.getNumPeople());
                     t.incrementNumCalls();
-                } else
+                } else {
                     t.setNumPeople(t.getNumPeople() + task.getNumPeople());
+                }
                 return;
             }
         }
@@ -136,7 +136,7 @@ public class LiftAgent extends Agent implements Drawable {
             return null;
         }
 
-        Task doneTask = null;
+        Task futureTask = null;
         if (currentTask == null) {
             currentTask = tasks.get(0);
             goingToOrigin = true;
@@ -149,39 +149,37 @@ public class LiftAgent extends Agent implements Drawable {
                 // Send new request if not all people got in
                 if (currentTask.getNumAllPeople() > max_capacity) {
                     System.out.println("Insufficient capacity for " + currentTask + ", making new request");
-                    if (currentTask.getNumPeople() > max_capacity)
-                        currentTask.setNumPeople(currentTask.getNumPeople() - max_capacity);
-                    else {
-                        // everyone from the first call got on the lift, make new call for the rest
-                        doneTask = currentTask;
-                        doneTask.removeNumPeople();
-                        doneTask.removeDestinationFloor();
+                    futureTask = currentTask;
+
+                    if (currentTask.getNumPeople() > max_capacity) { //first we transport the people for the first destination
+                        currentTask.setNumPeople(max_capacity); //Number of people that i can transport
+                        futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
+                    } else {
+                        // everyone from the first destination got on the lift, make new call for the rest
+                        futureTask.removeDestinationFloor();
                     }
-                } else
-                    currentTask.setNumPeople(0);
-                if (doneTask == null)
-                    doneTask = currentTask;
+                } else {
+                    return null;
+                }
             }
         } else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
             System.out.println(getLocalName() + " answered " + currentTask);
-            if (currentTask.getNumPeople() == 0 && currentTask.getDestinations().size() > 1) {
+            if (currentTask.getDestinations().size() > 1) { //If I have more destinations to go
                 currentTask.removeDestinationFloor();
-                if (currentTask.getNumPeopleSize() > 1)
-                    currentTask.removeNumPeople();
-            } else {
-                tasks.remove(0);
-                if (tasks.size() > 0) {
-                    currentTask = tasks.get(0);
-                    goingToOrigin = true;
-                    findState(currentTask);
-                } else {
+            } else { //finish the task, it's time to stop or move to the next one
+                tasks.remove(0); // remove currentTask
+                if (tasks.isEmpty()) {
                     state = Direction.STOPPED;
                     goingToOrigin = false;
                     currentTask = null;
+                } else {
+                    currentTask = tasks.get(0);
+                    goingToOrigin = true;
+                    findState(currentTask);
                 }
             }
         }
-        return doneTask;
+        return futureTask;
     }
 
     private void findState(Task task) {

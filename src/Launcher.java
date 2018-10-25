@@ -126,9 +126,9 @@ public class Launcher extends Repast3Launcher {
             public void execute() {
                 for (LiftAgent agent : agentList) {
                     agent.updatePosition();
-                    Task doneTask = agent.executeTasks();
-                    if (doneTask != null && doneTask.getNumPeople() != 0)
-                        newCalls.add(doneTask);
+                    Task futureTask = agent.executeTasks();
+                    if (futureTask != null)
+                        newCalls.add(futureTask);
                 }
             }
         });
