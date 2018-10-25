@@ -1,7 +1,9 @@
 package utils;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.TreeMap;
 
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -12,7 +14,7 @@ public class Task implements Serializable {
 
     public Task(int originFloor, int destinationFloor) {
         this.originFloor = originFloor;
-        if(originFloor < destinationFloor)
+        if (originFloor < destinationFloor)
             this.destFloorPeople = new TreeMap<>();
         else
             this.destFloorPeople = new TreeMap<>(Collections.reverseOrder());
@@ -21,7 +23,7 @@ public class Task implements Serializable {
     }
 
     public String toString() {
-        return originFloor + " " + destFloorPeople.keySet() + " " + destFloorPeople.values() +  " " + getDirection();
+        return originFloor + " " + destFloorPeople.keySet() + " " + destFloorPeople.values() + " " + getDirection();
     }
 
     public Direction getDirection() {
@@ -56,15 +58,16 @@ public class Task implements Serializable {
         //TODO: Delete? (Already done in removeDestinationFloor)
     }
 
-    public void setNumPeople(int numPeople) {
-        destFloorPeople.put(destFloorPeople.firstKey(), numPeople);
-    }
-
     public void addNumPeople(int numPeople) {
         //TODO: Delete? (Already done in addDestinationFloor)
     }
+
     public int getNumPeople() {
         return destFloorPeople.get(destFloorPeople.firstKey());
+    }
+
+    public void setNumPeople(int numPeople) {
+        destFloorPeople.put(destFloorPeople.firstKey(), numPeople);
     }
 
     public int getNumAllPeople() {

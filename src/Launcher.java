@@ -113,12 +113,11 @@ public class Launcher extends Repast3Launcher {
             @Override
             public void execute() {
                 Task task;
-                if (newCalls.size() > 0) {
+                if (!newCalls.isEmpty()) {
                     task = newCalls.get(0);
                     building.newCall(task);
                     newCalls.remove(0);
-                }
-                else
+                } else
                     building.newCall();
             }
         });

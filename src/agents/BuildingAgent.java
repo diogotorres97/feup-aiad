@@ -63,8 +63,8 @@ public class BuildingAgent extends Agent {
         try {
             DFAgentDescription[] result = DFService.search(this, template);
             System.out.println(result.length);
-            for (int i = 0; i < result.length; ++i)
-                System.out.println(this.lifts.add(result[i].getName()));
+            for (DFAgentDescription aResult : result)
+                System.out.println(this.lifts.add(aResult.getName()));
         } catch (FIPAException fe) {
             fe.printStackTrace();
         }
@@ -141,10 +141,10 @@ public class BuildingAgent extends Agent {
 
             //Get min
             int min = MAX_VALUE;
-            for (int i = 0; i < responses.size(); ++i) {
+            for (Object response : responses) {
                 int curr = MAX_VALUE;
                 try {
-                    curr = (Integer) ((ACLMessage) responses.get(i)).getContentObject();
+                    curr = (Integer) ((ACLMessage) response).getContentObject();
                 } catch (UnreadableException e) {
                     e.printStackTrace();
                 }
@@ -154,8 +154,8 @@ public class BuildingAgent extends Agent {
 
             //Choose first with min value
             boolean chosen = false;
-            for (int i = 0; i < responses.size(); i++) {
-                ACLMessage current = (ACLMessage) responses.get(i);
+            for (Object response : responses) {
+                ACLMessage current = (ACLMessage) response;
                 try {
                     ACLMessage msg = current.createReply();
                     if (!chosen && (Integer) current.getContentObject() == min) {
@@ -188,8 +188,8 @@ public class BuildingAgent extends Agent {
             try {
                 DFAgentDescription[] dfds = DFService.decodeNotification(inform.getContent());
                 BuildingAgent myBuilding = (BuildingAgent) myAgent;
-                for (int i = 0; i < dfds.length; i++) {
-                    AID agent = dfds[i].getName();
+                for (DFAgentDescription dfd : dfds) {
+                    AID agent = dfd.getName();
                     if (!myBuilding.getLifts().contains(agent)) {
                         myBuilding.getLifts().add(agent);
                         System.out.println("New agent in town: " + agent.getLocalName() + ", now have " + myBuilding.getLifts().size());

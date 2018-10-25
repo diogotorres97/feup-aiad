@@ -113,14 +113,13 @@ public class LiftAgent extends Agent implements Drawable {
         //If possible, join task with other tasks with same origin and same destination direction
         for (Task t : tasks) {
             if (!task.similarTo(t)) continue;
-            if (t != currentTask || goingToOrigin) {
+            if (t != currentTask && goingToOrigin) {
                 System.out.println(getLocalName() + " joined tasks: " + t + " and " + task);
                 if (t.getDestinationFloor() != task.getDestinationFloor()) {
                     t.addNumPeople(task.getNumPeople());
                     t.addDestinationFloor(task.getDestinationFloor(), task.getNumPeople());
                     t.incrementNumCalls();
-                }
-                else
+                } else
                     t.setNumPeople(t.getNumPeople() + task.getNumPeople());
                 return;
             }
@@ -149,7 +148,7 @@ public class LiftAgent extends Agent implements Drawable {
             if (currentTask.getOriginFloor() == getCurrentFloor()) {
                 // Send new request if not all people got in
                 if (currentTask.getNumAllPeople() > max_capacity) {
-                    System.out.println("Insufficient capacity for " + currentTask +  ", making new request");
+                    System.out.println("Insufficient capacity for " + currentTask + ", making new request");
                     if (currentTask.getNumPeople() > max_capacity)
                         currentTask.setNumPeople(currentTask.getNumPeople() - max_capacity);
                     else {
@@ -158,28 +157,24 @@ public class LiftAgent extends Agent implements Drawable {
                         doneTask.removeNumPeople();
                         doneTask.removeDestinationFloor();
                     }
-                }
-                else
+                } else
                     currentTask.setNumPeople(0);
                 if (doneTask == null)
                     doneTask = currentTask;
             }
-        }
-        else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
+        } else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
             System.out.println(getLocalName() + " answered " + currentTask);
             if (currentTask.getNumPeople() == 0 && currentTask.getDestinations().size() > 1) {
                 currentTask.removeDestinationFloor();
                 if (currentTask.getNumPeopleSize() > 1)
                     currentTask.removeNumPeople();
-            }
-            else {
+            } else {
                 tasks.remove(0);
                 if (tasks.size() > 0) {
                     currentTask = tasks.get(0);
                     goingToOrigin = true;
                     findState(currentTask);
-                }
-                else {
+                } else {
                     state = Direction.STOPPED;
                     goingToOrigin = false;
                     currentTask = null;
@@ -235,7 +230,7 @@ public class LiftAgent extends Agent implements Drawable {
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
             System.out.println(myAgent.getLocalName() + " got an accept!");
             try {
-                Task task = (Task)cfp.getContentObject();
+                Task task = (Task) cfp.getContentObject();
                 addTask(task);
             } catch (UnreadableException e) {
                 e.printStackTrace();
