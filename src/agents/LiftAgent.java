@@ -223,9 +223,10 @@ public class LiftAgent extends Agent implements Drawable {
 
             int numberOfPeople = 0;
             Random seed = new Random(System.currentTimeMillis());
+            int nTries = 0;
 
-            do { //TODO: Check limits on random and if the lift never fill
-                int randomFloor = seed.nextInt(currentTask.getDestFloorPeopleSize()); //Pick a random floor
+            do {
+                int randomFloor = currentTask.getDestinations().get(seed.nextInt(currentTask.getDestFloorPeopleSize())); //Pick a random floor
                 TreeMap<Integer, Integer> currentTaskDestMap = currentTask.getDestFloorPeople();
                 TreeMap<Integer, Integer> futureTaskDestMap = futureTask.getDestFloorPeople();
 
@@ -247,7 +248,7 @@ public class LiftAgent extends Agent implements Drawable {
                 } else {
                     break;
                 }
-            } while (numberOfPeople < max_capacity);
+            } while (numberOfPeople < max_capacity && ++nTries < 5);
 
             return futureTask; // Send new request if not all people got in
         }
