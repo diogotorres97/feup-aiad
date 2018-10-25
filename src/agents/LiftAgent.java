@@ -109,7 +109,7 @@ public class LiftAgent extends Agent implements Drawable {
         return y;
     }
 
-    public void addTask(Task task) {
+    private void addTask(Task task) {
         //If possible, join task with other tasks with same origin and same destination direction
         for (Task t : tasks) {
             if (!task.similarTo(t)) continue;
@@ -129,57 +129,68 @@ public class LiftAgent extends Agent implements Drawable {
     }
 
     public Task executeTasks() {
-        if (tasks.isEmpty()) {
+        if (tasks.isEmpty()) { //If no more tasks then stop
             state = Direction.STOPPED;
             goingToOrigin = false;
             currentTask = null;
             return null;
         }
 
-        Task futureTask = null;
-        if (currentTask == null) {
+        if (currentTask == null) { //if I finish my task then get the next one
             currentTask = tasks.get(0);
             goingToOrigin = true;
         }
 
         if (goingToOrigin) {
             findState(currentTask);
-            // Check if the lift got to the origin floor
-            if (currentTask.getOriginFloor() == getCurrentFloor()) {
-                // Send new request if not all people got in
-                if (currentTask.getNumAllPeople() > max_capacity) {
-                    System.out.println("Insufficient capacity for " + currentTask + ", making new request");
-                    futureTask = currentTask;
-                    //TODO: Random people of different destinations to fill the lift???
-                    if (currentTask.getNumPeople() > max_capacity) { //first we transport the people for the first destination
-                        currentTask.setNumPeople(max_capacity); //Number of people that i can transport
-                        futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
-                    } else {
-                        // everyone from the first destination got on the lift, make new call for the rest
-                        futureTask.removeDestinationFloor();
-                    }
-                } else {
-                    return null;
-                }
+            if (currentTask.getOriginFloor() == getCurrentFloor()) { // Check if the lift got to the origin floor
+                return startTask();
             }
         } else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
-            System.out.println(getLocalName() + " answered " + currentTask);
-            if (currentTask.getDestinations().size() > 1) { //If I have more destinations to go
-                currentTask.removeDestinationFloor();
-            } else { //finish the task, it's time to stop or move to the next one
-                tasks.remove(0); // remove currentTask
-                if (tasks.isEmpty()) {
-                    state = Direction.STOPPED;
-                    goingToOrigin = false;
-                    currentTask = null;
-                } else {
-                    currentTask = tasks.get(0);
-                    goingToOrigin = true;
-                    findState(currentTask);
-                }
+            endTask();
+        }
+
+        return null;
+    }
+
+    private Task startTask() {
+        Task futureTask;
+
+        if (currentTask.getNumAllPeople() > max_capacity) {
+            System.out.println("Insufficient capacity for " + currentTask + ", making new request");
+            futureTask = currentTask;
+
+            //TODO: Random people of different destinations to fill the lift???
+            if (currentTask.getNumPeople() > max_capacity) { //first we transport the people for the first destination
+                currentTask.setNumPeople(max_capacity); //Number of people that i can transport
+                futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
+            } else {
+                // everyone from the first destination got on the lift, make new call for the rest
+                futureTask.removeDestinationFloor();
+            }
+        } else {
+            return null;
+        }
+        return futureTask; // Send new request if not all people got in
+    }
+
+    private void endTask() {
+        System.out.println(getLocalName() + " answered " + currentTask);
+
+        if (currentTask.getDestinations().size() > 1) { //If I have more destinations to go
+            currentTask.removeDestinationFloor();
+        } else { //finish the task, it's time to stop or move to the next one
+            tasks.remove(0); // remove currentTask
+            if (tasks.isEmpty()) {
+                state = Direction.STOPPED;
+                goingToOrigin = false;
+                currentTask = null;
+            } else {
+                currentTask = tasks.get(0);
+                goingToOrigin = true;
+                findState(currentTask);
             }
         }
-        return futureTask;
     }
 
     private void findState(Task task) {
@@ -198,7 +209,6 @@ public class LiftAgent extends Agent implements Drawable {
         CallAnswerer(Agent a, MessageTemplate mt) {
             super(a, mt);
         }
-
 
         @Override
         protected ACLMessage handleCfp(ACLMessage cfp) {

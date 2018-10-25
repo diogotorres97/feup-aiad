@@ -46,7 +46,7 @@ public class Task implements Serializable {
         return new ArrayList<>(destFloorPeople.keySet());
     }
 
-    public int getdestFloorPeopleSize() {
+    public int getDestFloorPeopleSize() {
         return destFloorPeople.size();
     }
 
@@ -63,7 +63,7 @@ public class Task implements Serializable {
     }
 
     public int getNumAllPeople() {
-        return destFloorPeople.values().stream().mapToInt(aNumPeople -> aNumPeople).sum(); //Test this
+        return destFloorPeople.values().stream().mapToInt(aNumPeople -> aNumPeople).sum();
     }
 
     public void incrementNumCalls() {
