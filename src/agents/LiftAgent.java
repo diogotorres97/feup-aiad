@@ -22,6 +22,8 @@ import utils.evaluation.SmallestTimeNumpad;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.TreeMap;
 
 public class LiftAgent extends Agent implements Drawable {
     private int x;
@@ -144,7 +146,7 @@ public class LiftAgent extends Agent implements Drawable {
         if (goingToOrigin) {
             findState(currentTask);
             if (currentTask.getOriginFloor() == getCurrentFloor()) { // Check if the lift got to the origin floor
-                return startTask();
+                return startTask(0);
             }
         } else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
             endTask();
@@ -153,25 +155,82 @@ public class LiftAgent extends Agent implements Drawable {
         return null;
     }
 
-    private Task startTask() {
+    private Task startTask(int algorithm) {
+        Task futureTask;
+        switch (algorithm) {
+            case 0:
+                futureTask = pickFromFirstDestination();
+                break;
+            default:
+                futureTask = pickRandomly();
+                break;
+
+        }
+        return futureTask;
+    }
+
+    private Task pickFromFirstDestination() {
         Task futureTask;
 
         if (currentTask.getNumAllPeople() > max_capacity) {
             System.out.println("Insufficient capacity for " + currentTask + ", making new request");
             futureTask = currentTask;
 
-            //TODO: Random people of different destinations to fill the lift???
             if (currentTask.getNumPeople() > max_capacity) { //first we transport the people for the first destination
                 currentTask.setNumPeople(max_capacity); //Number of people that i can transport
                 futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
             } else {
                 // everyone from the first destination got on the lift, make new call for the rest
                 futureTask.removeDestinationFloor();
+                if (futureTask.getDestinations().isEmpty())
+                    return null;
             }
-        } else {
-            return null;
+
+            return futureTask; // Send new request if not all people got in
         }
-        return futureTask; // Send new request if not all people got in
+
+        return null;
+    }
+
+    private Task pickRandomly() {
+        Task futureTask;
+
+        if (currentTask.getNumAllPeople() > max_capacity) {
+            System.out.println("Insufficient capacity for " + currentTask + ", making new request");
+            futureTask = currentTask;
+
+            int numberOfPeople = 0;
+            Random seed = new Random(System.currentTimeMillis());
+
+            do { //TODO: Check limits on random
+                int randomFloor = seed.nextInt(currentTask.getDestFloorPeopleSize()); //Pick a random floor
+                TreeMap<Integer, Integer> currentTaskDestMap = currentTask.getDestFloorPeople();
+                TreeMap<Integer, Integer> futureTaskDestMap = futureTask.getDestFloorPeople();
+
+                int randomPeople = seed.nextInt(currentTaskDestMap.get(randomFloor)); //Pick a random number of people of that floor
+
+                if (randomPeople + numberOfPeople <= max_capacity) {
+                    numberOfPeople += randomPeople;
+                    currentTaskDestMap.put(randomFloor, randomPeople);
+
+                    //Handle left people
+                    int leftPeople = futureTaskDestMap.get(randomFloor) - randomPeople;
+                    if (leftPeople > 0) {
+                        futureTaskDestMap.put(randomFloor, futureTaskDestMap.get(randomFloor) - randomPeople);
+                    } else {
+                        futureTaskDestMap.remove(randomFloor);
+                        if (futureTaskDestMap.isEmpty()) //If doesnt exist more destination floors dont send new task to building
+                            return null;
+                    }
+                } else {
+                    break;
+                }
+            } while (numberOfPeople < max_capacity);
+
+            return futureTask; // Send new request if not all people got in
+        }
+
+        return null;
     }
 
     private void endTask() {

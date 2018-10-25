@@ -9,6 +9,7 @@ public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int originFloor;
+
     private TreeMap<Integer, Integer> destFloorPeople; //Key = destination floor, Value = nr. of people to drop off
     private int numCalls;
 
@@ -24,6 +25,10 @@ public class Task implements Serializable {
 
     public String toString() {
         return originFloor + " " + destFloorPeople.keySet() + " " + destFloorPeople.values() + " " + getDirection();
+    }
+
+    public TreeMap<Integer, Integer> getDestFloorPeople() {
+        return destFloorPeople;
     }
 
     public Direction getDirection() {
