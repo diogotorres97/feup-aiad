@@ -174,14 +174,34 @@ public class LiftAgent extends Agent implements Drawable {
 
         if (currentTask.getNumAllPeople() > max_capacity) {
             System.out.println("Insufficient capacity for " + currentTask + ", making new request");
-            futureTask = currentTask;
+            futureTask = currentTask.getClone();
 
             if (currentTask.getNumPeople() > max_capacity) { //first we transport the people for the first destination
                 currentTask.setNumPeople(max_capacity); //Number of people that i can transport
                 futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
-            } else { //TODO: To fill the lift
+                currentTask.removeTail(); //remove the rest of destinations of current task
+            } else { 
                 // everyone from the first destination got on the lift, make new call for the rest
+                int numberOfPeople = currentTask.getNumPeople();
                 futureTask.removeDestinationFloor();
+                currentTask.removeTail();
+                TreeMap<Integer, Integer> futureTaskDestMap = futureTask.getDestFloorPeople();
+
+                for(int key : futureTaskDestMap.keySet()) {
+                    if(futureTaskDestMap.get(key) + numberOfPeople > max_capacity) {
+                        int leftPeople = (futureTaskDestMap.get(key) + numberOfPeople) - max_capacity;
+                        currentTask.addDestinationFloor(key, futureTaskDestMap.get(key) - leftPeople);
+                        if(leftPeople > 0) {
+                            futureTaskDestMap.put(key, leftPeople);
+                        } else {
+                            futureTaskDestMap.remove(key);
+                        }
+                    } else {
+                        currentTask.addDestinationFloor(key, futureTaskDestMap.get(key));
+                        futureTaskDestMap.remove(key);
+                    }
+                }
+
                 if (futureTask.getDestinations().isEmpty())
                     return null;
             }

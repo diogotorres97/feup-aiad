@@ -3,6 +3,7 @@ package utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class Task implements Serializable {
@@ -21,6 +22,15 @@ public class Task implements Serializable {
             this.destFloorPeople = new TreeMap<>(Collections.reverseOrder());
         this.destFloorPeople.put(destinationFloor, 1);
         this.numCalls = 1;
+    }
+
+    public Task getClone() {
+        try {
+            return (Task) this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String toString() {
@@ -79,6 +89,11 @@ public class Task implements Serializable {
         return numCalls;
     }
 
+    public void removeTail() {
+        Map.Entry<Integer, Integer> temp = destFloorPeople.firstEntry();
+        destFloorPeople.clear();
+        destFloorPeople.put(temp.getKey(),temp.getValue());
+    }
     public boolean similarTo(Task t) {
         return t.getOriginFloor() == getOriginFloor() && getDirection() == getDirection();
     }
