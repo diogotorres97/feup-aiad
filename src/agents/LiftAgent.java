@@ -179,7 +179,7 @@ public class LiftAgent extends Agent implements Drawable {
             if (currentTask.getNumPeople() > max_capacity) { //first we transport the people for the first destination
                 currentTask.setNumPeople(max_capacity); //Number of people that i can transport
                 futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
-            } else {
+            } else { //TODO: To fill the lift
                 // everyone from the first destination got on the lift, make new call for the rest
                 futureTask.removeDestinationFloor();
                 if (futureTask.getDestinations().isEmpty())
@@ -202,7 +202,7 @@ public class LiftAgent extends Agent implements Drawable {
             int numberOfPeople = 0;
             Random seed = new Random(System.currentTimeMillis());
 
-            do { //TODO: Check limits on random
+            do { //TODO: Check limits on random and if the lift never fill
                 int randomFloor = seed.nextInt(currentTask.getDestFloorPeopleSize()); //Pick a random floor
                 TreeMap<Integer, Integer> currentTaskDestMap = currentTask.getDestFloorPeople();
                 TreeMap<Integer, Integer> futureTaskDestMap = futureTask.getDestFloorPeople();
@@ -216,7 +216,7 @@ public class LiftAgent extends Agent implements Drawable {
                     //Handle left people
                     int leftPeople = futureTaskDestMap.get(randomFloor) - randomPeople;
                     if (leftPeople > 0) {
-                        futureTaskDestMap.put(randomFloor, futureTaskDestMap.get(randomFloor) - randomPeople);
+                        futureTaskDestMap.put(randomFloor, leftPeople);
                     } else {
                         futureTaskDestMap.remove(randomFloor);
                         if (futureTaskDestMap.isEmpty()) //If doesnt exist more destination floors dont send new task to building
