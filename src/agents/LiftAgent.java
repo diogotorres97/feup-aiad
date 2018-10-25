@@ -75,7 +75,7 @@ public class LiftAgent extends Agent implements Drawable {
     public void updatePosition() {
         space.putObjectAt(getX(), getY(), null);
 
-        if (state == Direction.UP && y >= 0)
+        if (state == Direction.UP && y > 0)
             y--;
         else if (state == Direction.DOWN && y < space.getSizeY())
             y++;
@@ -146,7 +146,7 @@ public class LiftAgent extends Agent implements Drawable {
         if (goingToOrigin) {
             findState(currentTask);
             if (currentTask.getOriginFloor() == getCurrentFloor()) { // Check if the lift got to the origin floor
-                return startTask(0);
+                return startTask(1);
             }
         } else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
             endTask();
