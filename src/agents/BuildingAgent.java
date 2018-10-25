@@ -58,6 +58,14 @@ public class BuildingAgent extends Agent {
         System.out.println("Setting up building");
     }
 
+    private DFAgentDescription getDFAgentDescriptionTemplate() {
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("lift");
+        template.addServices(sd);
+        return template;
+    }
+
     private void initialLiftAgentSearch() {
         DFAgentDescription template = getDFAgentDescriptionTemplate();
         try {
@@ -75,14 +83,6 @@ public class BuildingAgent extends Agent {
         addBehaviour(new LiftAgentSubscription(this, template));
     }
 
-    private DFAgentDescription getDFAgentDescriptionTemplate() {
-        DFAgentDescription template = new DFAgentDescription();
-        ServiceDescription sd = new ServiceDescription();
-        sd.setType("lift");
-        template.addServices(sd);
-        return template;
-    }
-
     @Override
     protected void takeDown() {
         System.out.println("Taking down");
@@ -96,13 +96,12 @@ public class BuildingAgent extends Agent {
         this.numFloors = numFloors;
     }
 
-    public Vector<AID> getLifts() {
+    private Vector<AID> getLifts() {
         return lifts;
     }
 
     public void newCall() {
-        Task task = callStrategy.generateTask();
-        newCall(task);
+        newCall(callStrategy.generateTask());
     }
 
     public void newCall(Task task) {
@@ -161,8 +160,9 @@ public class BuildingAgent extends Agent {
                     if (!chosen && (Integer) current.getContentObject() == min) {
                         msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
                         chosen = true;
-                    } else
+                    } else {
                         msg.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                    }
                     acceptances.add(msg);
                 } catch (UnreadableException e) {
                     e.printStackTrace();
@@ -174,7 +174,6 @@ public class BuildingAgent extends Agent {
         protected void handleAllResultNotifications(Vector resultNotifications) {
             //System.out.println("got " + resultNotifications.size() + " result notifs!");
         }
-
     }
 
     private class LiftAgentSubscription extends SubscriptionInitiator {
@@ -199,6 +198,5 @@ public class BuildingAgent extends Agent {
                 fe.printStackTrace();
             }
         }
-
     }
 }

@@ -150,7 +150,7 @@ public class LiftAgent extends Agent implements Drawable {
                 if (currentTask.getNumAllPeople() > max_capacity) {
                     System.out.println("Insufficient capacity for " + currentTask + ", making new request");
                     futureTask = currentTask;
-
+                    //TODO: Random people of different destinations to fill the lift???
                     if (currentTask.getNumPeople() > max_capacity) { //first we transport the people for the first destination
                         currentTask.setNumPeople(max_capacity); //Number of people that i can transport
                         futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
