@@ -92,8 +92,9 @@ public class Task implements Serializable {
     public void removeTail() {
         Map.Entry<Integer, Integer> temp = destFloorPeople.firstEntry();
         destFloorPeople.clear();
-        destFloorPeople.put(temp.getKey(),temp.getValue());
+        destFloorPeople.put(temp.getKey(), temp.getValue());
     }
+
     public boolean similarTo(Task t) {
         return t.getOriginFloor() == getOriginFloor() && getDirection() == getDirection();
     }

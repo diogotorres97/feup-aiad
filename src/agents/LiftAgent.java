@@ -178,20 +178,21 @@ public class LiftAgent extends Agent implements Drawable {
 
             if (currentTask.getNumPeople() > max_capacity) { //first we transport the people for the first destination
                 currentTask.setNumPeople(max_capacity); //Number of people that i can transport
-                futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
                 currentTask.removeTail(); //remove the rest of destinations of current task
+                futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
             } else {
-                // everyone from the first destination got on the lift, make new call for the rest
+                // everyone from the first destination got on the lift, fill the lift and make new call for the rest
                 int numberOfPeople = currentTask.getNumPeople();
                 futureTask.removeDestinationFloor();
                 currentTask.removeTail();
                 TreeMap<Integer, Integer> futureTaskDestMap = futureTask.getDestFloorPeople();
 
-                for(int key : futureTaskDestMap.keySet()) {
-                    if(futureTaskDestMap.get(key) + numberOfPeople > max_capacity) {
+                for (int key : futureTaskDestMap.keySet()) {
+                    if (futureTaskDestMap.get(key) + numberOfPeople > max_capacity) {
                         int leftPeople = (futureTaskDestMap.get(key) + numberOfPeople) - max_capacity;
                         currentTask.addDestinationFloor(key, futureTaskDestMap.get(key) - leftPeople);
-                        if(leftPeople > 0) {
+
+                        if (leftPeople > 0) {
                             futureTaskDestMap.put(key, leftPeople);
                         } else {
                             futureTaskDestMap.remove(key);
@@ -219,7 +220,7 @@ public class LiftAgent extends Agent implements Drawable {
 
         if (currentTask.getNumAllPeople() > max_capacity) {
             System.out.println("Insufficient capacity for " + currentTask + ", making new request");
-            futureTask = currentTask;
+            futureTask = currentTask.getClone();
 
             int numberOfPeople = 0;
             Random seed = new Random(System.currentTimeMillis());
@@ -231,23 +232,33 @@ public class LiftAgent extends Agent implements Drawable {
                 TreeMap<Integer, Integer> futureTaskDestMap = futureTask.getDestFloorPeople();
 
                 int randomPeople = seed.nextInt(currentTaskDestMap.get(randomFloor)); //Pick a random number of people of that floor
+                int leftTotalPeopleDestination;
 
-                if (randomPeople + numberOfPeople <= max_capacity) {
-                    numberOfPeople += randomPeople;
-                    currentTaskDestMap.put(randomFloor, randomPeople);
+                //Fill the lift
+                if (randomPeople + numberOfPeople > max_capacity) {
+                    int leftPeople = (randomPeople + numberOfPeople) - max_capacity;
+                    int peopleToPick = randomPeople - leftPeople;
+                    currentTaskDestMap.put(randomFloor, peopleToPick);
+                    numberOfPeople += peopleToPick;
 
-                    //Handle left people
-                    int leftPeople = futureTaskDestMap.get(randomFloor) - randomPeople;
-                    if (leftPeople > 0) {
-                        futureTaskDestMap.put(randomFloor, leftPeople);
-                    } else {
-                        futureTaskDestMap.remove(randomFloor);
-                        if (futureTaskDestMap.isEmpty()) //If doesnt exist more destination floors dont send new task to building
-                            return null;
-                    }
+                    leftTotalPeopleDestination = (futureTaskDestMap.get(randomFloor) - randomPeople) + leftPeople;
+                    futureTaskDestMap.put(randomFloor, leftTotalPeopleDestination);
                 } else {
-                    break;
+                    numberOfPeople += randomPeople;
+                    leftTotalPeopleDestination = futureTaskDestMap.get(randomFloor) - randomPeople;
+                    currentTaskDestMap.put(randomFloor, randomPeople);
                 }
+
+                //Handle left people
+                if (leftTotalPeopleDestination > 0) {
+                    futureTaskDestMap.put(randomFloor, leftTotalPeopleDestination);
+                } else {
+                    futureTaskDestMap.remove(randomFloor);
+                }
+
+                if (futureTaskDestMap.isEmpty()) //If doesnt exist more destination floors dont send new task to building
+                    return null;
+
             } while (numberOfPeople < max_capacity && ++nTries < 5);
 
             return futureTask; // Send new request if not all people got in
