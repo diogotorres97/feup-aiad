@@ -242,11 +242,11 @@ public class LiftAgent extends Agent implements Drawable {
                     numberOfPeople += peopleToPick;
 
                     leftTotalPeopleDestination = (futureTaskDestMap.get(randomFloor) - randomPeople) + leftPeople;
-                    futureTaskDestMap.put(randomFloor, leftTotalPeopleDestination);
                 } else {
                     numberOfPeople += randomPeople;
-                    leftTotalPeopleDestination = futureTaskDestMap.get(randomFloor) - randomPeople;
                     currentTaskDestMap.put(randomFloor, randomPeople);
+                    
+                    leftTotalPeopleDestination = futureTaskDestMap.get(randomFloor) - randomPeople;
                 }
 
                 //Handle left people
