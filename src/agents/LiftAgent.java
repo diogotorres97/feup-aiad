@@ -77,7 +77,7 @@ public class LiftAgent extends Agent implements Drawable {
 
         if (state == Direction.UP && y > 0)
             y--;
-        else if (state == Direction.DOWN && y < space.getSizeY())
+        else if (state == Direction.DOWN && y < space.getSizeY() - 1)
             y++;
 
         space.putObjectAt(getX(), getY(), this);
