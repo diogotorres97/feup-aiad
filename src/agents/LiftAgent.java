@@ -146,7 +146,7 @@ public class LiftAgent extends Agent implements Drawable {
         if (goingToOrigin) {
             findState(currentTask);
             if (currentTask.getOriginFloor() == getCurrentFloor()) { // Check if the lift got to the origin floor
-                return startTask(1);
+                return startTask(0);
             }
         } else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
             endTask();
