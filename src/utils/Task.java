@@ -96,6 +96,6 @@ public class Task implements Serializable {
     }
 
     public boolean similarTo(Task t) {
-        return t.getOriginFloor() == getOriginFloor() && getDirection() == getDirection();
+        return t.getOriginFloor() == getOriginFloor() && t.getDirection() == getDirection();
     }
 }
