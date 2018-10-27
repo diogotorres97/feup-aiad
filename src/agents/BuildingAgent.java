@@ -58,13 +58,21 @@ public class BuildingAgent extends Agent {
         System.out.println("Setting up building");
     }
 
+    private DFAgentDescription getDFAgentDescriptionTemplate() {
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("lift");
+        template.addServices(sd);
+        return template;
+    }
+
     private void initialLiftAgentSearch() {
         DFAgentDescription template = getDFAgentDescriptionTemplate();
         try {
             DFAgentDescription[] result = DFService.search(this, template);
             System.out.println(result.length);
-            for (int i = 0; i < result.length; ++i)
-                System.out.println(this.lifts.add(result[i].getName()));
+            for (DFAgentDescription aResult : result)
+                System.out.println(this.lifts.add(aResult.getName()));
         } catch (FIPAException fe) {
             fe.printStackTrace();
         }
@@ -73,14 +81,6 @@ public class BuildingAgent extends Agent {
     private void liftAgentSubscription() {
         DFAgentDescription template = getDFAgentDescriptionTemplate();
         addBehaviour(new LiftAgentSubscription(this, template));
-    }
-
-    private DFAgentDescription getDFAgentDescriptionTemplate() {
-        DFAgentDescription template = new DFAgentDescription();
-        ServiceDescription sd = new ServiceDescription();
-        sd.setType("lift");
-        template.addServices(sd);
-        return template;
     }
 
     @Override
@@ -96,13 +96,12 @@ public class BuildingAgent extends Agent {
         this.numFloors = numFloors;
     }
 
-    public Vector<AID> getLifts() {
+    private Vector<AID> getLifts() {
         return lifts;
     }
 
     public void newCall() {
-        Task task = callStrategy.generateTask();
-        newCall(task);
+        newCall(callStrategy.generateTask());
     }
 
     public void newCall(Task task) {
@@ -141,10 +140,10 @@ public class BuildingAgent extends Agent {
 
             //Get min
             int min = MAX_VALUE;
-            for (int i = 0; i < responses.size(); ++i) {
+            for (Object response : responses) {
                 int curr = MAX_VALUE;
                 try {
-                    curr = (Integer) ((ACLMessage) responses.get(i)).getContentObject();
+                    curr = (Integer) ((ACLMessage) response).getContentObject();
                 } catch (UnreadableException e) {
                     e.printStackTrace();
                 }
@@ -154,15 +153,16 @@ public class BuildingAgent extends Agent {
 
             //Choose first with min value
             boolean chosen = false;
-            for (int i = 0; i < responses.size(); i++) {
-                ACLMessage current = (ACLMessage) responses.get(i);
+            for (Object response : responses) {
+                ACLMessage current = (ACLMessage) response;
                 try {
                     ACLMessage msg = current.createReply();
                     if (!chosen && (Integer) current.getContentObject() == min) {
                         msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
                         chosen = true;
-                    } else
+                    } else {
                         msg.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                    }
                     acceptances.add(msg);
                 } catch (UnreadableException e) {
                     e.printStackTrace();
@@ -174,7 +174,6 @@ public class BuildingAgent extends Agent {
         protected void handleAllResultNotifications(Vector resultNotifications) {
             //System.out.println("got " + resultNotifications.size() + " result notifs!");
         }
-
     }
 
     private class LiftAgentSubscription extends SubscriptionInitiator {
@@ -188,8 +187,8 @@ public class BuildingAgent extends Agent {
             try {
                 DFAgentDescription[] dfds = DFService.decodeNotification(inform.getContent());
                 BuildingAgent myBuilding = (BuildingAgent) myAgent;
-                for (int i = 0; i < dfds.length; i++) {
-                    AID agent = dfds[i].getName();
+                for (DFAgentDescription dfd : dfds) {
+                    AID agent = dfd.getName();
                     if (!myBuilding.getLifts().contains(agent)) {
                         myBuilding.getLifts().add(agent);
                         System.out.println("New agent in town: " + agent.getLocalName() + ", now have " + myBuilding.getLifts().size());
@@ -199,6 +198,5 @@ public class BuildingAgent extends Agent {
                 fe.printStackTrace();
             }
         }
-
     }
 }

@@ -2,7 +2,6 @@ package utils.call;
 
 import utils.Task;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class CallStrategy {
@@ -13,7 +12,7 @@ public abstract class CallStrategy {
     protected double PROB_OTHER_FLOORS_DEST;
     Random rng;
 
-    public int generateOriginFloor() {
+    private int generateOriginFloor() {
         double random = rng.nextDouble();
 
         if (random < PROB_BOTTOM_FLOOR_ORIGIN)
@@ -23,7 +22,7 @@ public abstract class CallStrategy {
     }
 
 
-    public int generateDestinationFloor() {
+    private int generateDestinationFloor() {
         double random = rng.nextDouble();
 
         if (random < PROB_BOTTOM_FLOOR_DEST)

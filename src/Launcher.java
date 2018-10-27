@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Launcher extends Repast3Launcher {
-    public static boolean BATCH_MODE = false;
+    private static boolean BATCH_MODE = false;
 
     private int LIFT_MAX_CAPACITY = 6;
     private int CALL_FREQUENCY = 100;
@@ -112,14 +112,12 @@ public class Launcher extends Repast3Launcher {
         getSchedule().scheduleActionAtInterval(CALL_FREQUENCY, new BasicAction() {
             @Override
             public void execute() {
-                Task task;
-                if (newCalls.size() > 0) {
-                    task = newCalls.get(0);
-                    building.newCall(task);
+                if (!newCalls.isEmpty()) {
+                    building.newCall(newCalls.get(0));
                     newCalls.remove(0);
-                }
-                else
+                } else {
                     building.newCall();
+                }
             }
         });
         getSchedule().scheduleActionAtInterval(LIFT_SPEED, new BasicAction() {
@@ -127,9 +125,9 @@ public class Launcher extends Repast3Launcher {
             public void execute() {
                 for (LiftAgent agent : agentList) {
                     agent.updatePosition();
-                    Task doneTask = agent.executeTasks();
-                    if (doneTask != null && doneTask.getNumPeople() != 0)
-                        newCalls.add(doneTask);
+                    Task futureTask = agent.executeTasks();
+                    if (futureTask != null)
+                        newCalls.add(futureTask);
                 }
             }
         });
