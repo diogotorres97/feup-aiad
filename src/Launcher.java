@@ -100,12 +100,15 @@ public class Launcher extends Repast3Launcher {
         launchAgents();
 
         recorder = new DataRecorder("./data.txt", this);
-        recorder.addNumericDataSource("lift0_floor", () -> {
-            if(!agentList.isEmpty())
-                return agentList.get(0).getCurrentFloor();
-            return 0;
-        });
-
+        for(LiftAgent a : agentList) {
+            recorder.addNumericDataSource(a.getLocalName() + "_ocupation", () -> {
+                if(a.getCurrentTask() != null && !a.isGoingToOrigin())
+                    return a.getCurrentTask().getNumPeople()*1.0/LIFT_MAX_CAPACITY; //TODO: Is it correct or should be getNumAllPeople()?
+                return 0;
+            },
+                    -1, //Record all digits pre decimal separator
+                    3); //Round to 3 digits post decimal separator
+        }
     }
 
     private void buildDisplay() {

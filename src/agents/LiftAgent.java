@@ -297,6 +297,14 @@ public class LiftAgent extends Agent implements Drawable {
         }
     }
 
+    public Task getCurrentTask() {
+        return currentTask;
+    }
+
+    public boolean isGoingToOrigin() {
+        return goingToOrigin;
+    }
+
     class CallAnswerer extends ContractNetResponder {
 
         CallAnswerer(Agent a, MessageTemplate mt) {
