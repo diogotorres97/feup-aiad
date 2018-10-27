@@ -54,6 +54,22 @@ public class LiftAgent extends Agent implements Drawable {
         }
     }
 
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
+
+    public Task getCurrentTask() {
+        return currentTask;
+    }
+
+    public boolean isGoingToOrigin() {
+        return goingToOrigin;
+    }
+
+    public Direction getState() {
+        return state;
+    }
+
     @Override
     protected void setup() {
         //Register as a lift so building can later find out about it at runtime
@@ -85,6 +101,10 @@ public class LiftAgent extends Agent implements Drawable {
 
     public int getCurrentFloor() {
         return space.getSizeY() - y - 1;
+    }
+
+    public int getTotalFloors() {
+        return space.getSizeY() - 1;
     }
 
     @Override
