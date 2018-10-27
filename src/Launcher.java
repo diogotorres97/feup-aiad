@@ -7,6 +7,8 @@ import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
 import uchicago.src.reflector.ListPropertyDescriptor;
+import uchicago.src.sim.analysis.DataRecorder;
+import uchicago.src.sim.analysis.NumericDataSource;
 import uchicago.src.sim.engine.BasicAction;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
@@ -38,6 +40,8 @@ public class Launcher extends Repast3Launcher {
 
     private BuildingAgent building;
     private ArrayList<Task> newCalls = new ArrayList<>();
+
+    private DataRecorder recorder;
 
     public static void main(String[] args) {
         SimInit init = new SimInit();
@@ -94,6 +98,14 @@ public class Launcher extends Repast3Launcher {
         space = new Object2DGrid(NUM_LIFTS + 1, NUM_FLOORS);
 
         launchAgents();
+
+        recorder = new DataRecorder("./data.txt", this);
+        recorder.addNumericDataSource("lift0_floor", () -> {
+            if(!agentList.isEmpty())
+                return agentList.get(0).getCurrentFloor();
+            return 0;
+        });
+
     }
 
     private void buildDisplay() {
@@ -131,6 +143,13 @@ public class Launcher extends Repast3Launcher {
                 }
             }
         });
+        getSchedule().scheduleActionAtInterval(LIFT_SPEED, new BasicAction() {
+            @Override
+            public void execute() {
+                recorder.record();
+            }
+        });
+        getSchedule().scheduleActionAtEnd(recorder, "writeToFile");
     }
 
     @Override
