@@ -58,7 +58,7 @@ public abstract class SmallestTime extends CallEvaluation {
                 //If t isn't the current task and i cannot merge the task then sum the time to arrive to origin plus the time until finish the current task
                 score += Math.abs(destFloor - t.getOriginFloor()) * LIFT_SPEED + STOP_TIME;
                 int size = t.getDestFloorPeopleSize() - 1;
-                if (!numpad) {
+                if (numpad) {
                     destFloor = t.getDestinations().get(size);
                 } else {
                     destFloor = estimateDestFloor(t);
