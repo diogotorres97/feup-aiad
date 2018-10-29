@@ -26,6 +26,8 @@ import java.util.Random;
 import java.util.TreeMap;
 
 public class LiftAgent extends Agent implements Drawable {
+    private final int speed;
+    private final int stop_time;
     private int x;
     private int y;
     private Object2DGrid space;
@@ -36,9 +38,11 @@ public class LiftAgent extends Agent implements Drawable {
     private boolean goingToOrigin = false;
     private Direction state = Direction.STOPPED;
 
-    public LiftAgent(int x, int y, int strategy, int max_capacity, Object2DGrid space) {
+    public LiftAgent(int x, int y, int speed, int stop_time, int strategy, int max_capacity, Object2DGrid space) {
         this.x = x;
         this.y = y;
+        this.speed = speed;
+        this.stop_time = stop_time;
         this.space = space;
         this.max_capacity = max_capacity;
         switch (strategy) {
@@ -315,6 +319,14 @@ public class LiftAgent extends Agent implements Drawable {
             state = task.getDirection();
             goingToOrigin = false;
         }
+    }
+
+    public int getStopTime() {
+        return stop_time;
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     class CallAnswerer extends ContractNetResponder {

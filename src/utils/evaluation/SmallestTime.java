@@ -32,10 +32,8 @@ public abstract class SmallestTime extends CallEvaluation {
         int destFloor = 0;
         boolean addToTask = false;
 
-        int STOP_TIME = 1;
-        int LIFT_SPEED = 15;
-
-        //TODO: Refactor logic and access this variables from Launcher
+        int STOP_TIME = agent.getStopTime();
+        int LIFT_SPEED = agent.getSpeed();
 
         for (Task t : agent.getTasks()) {
             if (t == agent.getCurrentTask() && !agent.isGoingToOrigin()) {
