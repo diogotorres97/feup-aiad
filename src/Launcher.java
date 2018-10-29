@@ -156,7 +156,7 @@ public class Launcher extends Repast3Launcher {
             agentList.add(agent);
         }
 
-        building = new BuildingAgent(NUM_FLOORS, CALL_STRATEGY, space);
+        building = new BuildingAgent(NUM_FLOORS, CALL_STRATEGY, LIFT_SPEED, space);
         try {
             mainContainer.acceptNewAgent("spy", building).start();
         } catch (StaleProxyException e) {

@@ -29,13 +29,13 @@ public class BuildingAgent extends Agent {
     private Vector<Floor> floors;
     private Object2DGrid space;
 
-    public BuildingAgent(int numFloors, int callStrategy, Object2DGrid space) {
+    public BuildingAgent(int numFloors, int callStrategy, int lift_speed, Object2DGrid space) {
         this.numFloors = numFloors;
         this.lifts = new Vector<>();
         this.space = space;
         this.floors = new Vector<>(numFloors);
         for (int i = 0; i < numFloors; ++i) {
-            Floor floor = new Floor(0, numFloors - 1 - i);
+            Floor floor = new Floor(0, numFloors - 1 - i, lift_speed);
             this.floors.add(floor);
             space.putObjectAt(floor.getX(), floor.getY(), floor);
         }
