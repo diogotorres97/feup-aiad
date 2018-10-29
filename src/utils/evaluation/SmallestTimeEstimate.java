@@ -1,16 +1,12 @@
 package utils.evaluation;
 
 import agents.LiftAgent;
-import utils.Task;
 
-public class SmallestTimeEstimate extends CallEvaluation {
+public class SmallestTimeEstimate extends SmallestTime {
 
     public SmallestTimeEstimate(LiftAgent agent) {
         super(agent);
+        this.numpad = false;
     }
 
-    @Override
-    public int evaluate(Task task) {
-        return 0;
-    }
 }

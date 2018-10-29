@@ -29,6 +29,7 @@ public class Launcher extends Repast3Launcher {
     private int LIFT_SPEED = 15;
     private int LIFT_STRATEGY = 0;
     private int CALL_STRATEGY = 0;
+    private int LIFT_STOP_TIME = 1;
 
     private ContainerController mainContainer;
 
@@ -143,7 +144,9 @@ public class Launcher extends Repast3Launcher {
 
     private void launchAgents() {
         for (int i = 0; i < NUM_LIFTS; ++i) {
-            LiftAgent agent = new LiftAgent(i + 1, NUM_FLOORS - 1, LIFT_STRATEGY, LIFT_MAX_CAPACITY, space);
+            LiftAgent agent = new LiftAgent(i + 1, NUM_FLOORS - 1,
+                    LIFT_SPEED, LIFT_STOP_TIME, LIFT_STRATEGY, LIFT_MAX_CAPACITY,
+                    space);
             space.putObjectAt(agent.getX(), agent.getY(), agent);
             try {
                 mainContainer.acceptNewAgent("lift" + i, agent).start();
@@ -153,7 +156,7 @@ public class Launcher extends Repast3Launcher {
             agentList.add(agent);
         }
 
-        building = new BuildingAgent(NUM_FLOORS, CALL_STRATEGY, space);
+        building = new BuildingAgent(NUM_FLOORS, CALL_STRATEGY, LIFT_SPEED, space);
         try {
             mainContainer.acceptNewAgent("spy", building).start();
         } catch (StaleProxyException e) {
