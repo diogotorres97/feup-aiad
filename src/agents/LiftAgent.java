@@ -35,12 +35,16 @@ public class LiftAgent extends Agent implements Drawable {
     private Task currentTask = null;
     private boolean goingToOrigin = false;
     private Direction state = Direction.STOPPED;
+    private int usageTime;
+    private int noUsageTime;
 
     public LiftAgent(int x, int y, int strategy, int max_capacity, Object2DGrid space) {
         this.x = x;
         this.y = y;
         this.space = space;
         this.max_capacity = max_capacity;
+        this.usageTime = 0;
+        this.noUsageTime = 0;
         switch (strategy) {
             case 0:
                 this.evaluator = new Closest(this);
@@ -85,6 +89,10 @@ public class LiftAgent extends Agent implements Drawable {
 
     public int getCurrentFloor() {
         return space.getSizeY() - y - 1;
+    }
+
+    public double getUsageRate() {
+        return this.usageTime + this.noUsageTime == 0 ? 0 : this.usageTime*1.0/(this.usageTime+this.noUsageTime);
     }
 
     @Override
@@ -132,11 +140,14 @@ public class LiftAgent extends Agent implements Drawable {
 
     public Task executeTasks() {
         if (tasks.isEmpty()) { //If no more tasks then stop
+            ++this.noUsageTime;
             state = Direction.STOPPED;
             goingToOrigin = false;
             currentTask = null;
             return null;
         }
+
+        ++this.usageTime;
 
         if (currentTask == null) { //if I finish my task then get the next one
             currentTask = tasks.get(0);
@@ -303,6 +314,10 @@ public class LiftAgent extends Agent implements Drawable {
 
     public boolean isGoingToOrigin() {
         return goingToOrigin;
+    }
+
+    public ArrayList<Task> getTasks() {
+        return tasks;
     }
 
     class CallAnswerer extends ContractNetResponder {
