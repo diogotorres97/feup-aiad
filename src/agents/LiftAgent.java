@@ -26,6 +26,8 @@ import java.util.Random;
 import java.util.TreeMap;
 
 public class LiftAgent extends Agent implements Drawable {
+    private double maxCallTime;
+    private double minCallTime;
     private int x;
     private int y;
     private Object2DGrid space;
@@ -45,6 +47,8 @@ public class LiftAgent extends Agent implements Drawable {
         this.max_capacity = max_capacity;
         this.usageTime = 0;
         this.noUsageTime = 0;
+        this.minCallTime = Double.MAX_VALUE;
+        this.maxCallTime = Double.MIN_VALUE;
         switch (strategy) {
             case 0:
                 this.evaluator = new Closest(this);
@@ -95,6 +99,14 @@ public class LiftAgent extends Agent implements Drawable {
         return this.usageTime + this.noUsageTime == 0 ? 0 : this.usageTime*1.0/(this.usageTime+this.noUsageTime);
     }
 
+    public double getMaxWaitingTime() {
+        return maxCallTime/1000000000;
+    }
+
+    public double getMinWaitingTime() {
+        return minCallTime/1000000000;
+    }
+
     @Override
     protected void takeDown() {
         try {
@@ -120,15 +132,15 @@ public class LiftAgent extends Agent implements Drawable {
     }
 
     private void addTask(Task task) {
+        long startTime = System.nanoTime();
         //If possible, join task with other tasks with same origin and same destination direction
         for (Task t : tasks) {
             if (!task.similarTo(t)) continue;
             if (t != currentTask && goingToOrigin) {
                 System.out.println(getLocalName() + " joined tasks: " + t + " and " + task);
+                t.setStartTime(startTime);
                 if (t.getDestinationFloor() != task.getDestinationFloor()) {
                     t.addDestinationFloor(task.getDestinationFloor(), task.getNumPeople());
-                    //TODO: Delete this calls shit
-                    t.incrementNumCalls();
                 } else {
                     t.setNumPeople(t.getNumPeople() + task.getNumPeople());
                 }
@@ -136,6 +148,7 @@ public class LiftAgent extends Agent implements Drawable {
             }
         }
 
+        task.setStartTime(startTime);
         tasks.add(task);
     }
 
@@ -158,6 +171,7 @@ public class LiftAgent extends Agent implements Drawable {
         if (goingToOrigin) {
             findState(currentTask);
             if (currentTask.getOriginFloor() == getCurrentFloor()) { // Check if the lift got to the origin floor
+                setEndAndUpdateMinMax();
                 return startTask(1);
             }
         } else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
@@ -165,6 +179,13 @@ public class LiftAgent extends Agent implements Drawable {
         }
 
         return null;
+    }
+
+    private void setEndAndUpdateMinMax() {
+        currentTask.setEndTime(System.nanoTime());
+        double taskWaitingTime = currentTask.getWaitingTime();
+        maxCallTime = Math.max(maxCallTime, taskWaitingTime);
+        minCallTime= Math.min(minCallTime, taskWaitingTime);
     }
 
     private Task startTask(int algorithm) {
