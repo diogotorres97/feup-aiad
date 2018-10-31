@@ -10,9 +10,10 @@ public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int originFloor;
+    private double startTime = -1;
+    private double endTime = -1; //Pickup time
 
     private TreeMap<Integer, Integer> destFloorPeople; //Key = destination floor, Value = nr. of people to drop off
-    private int numCalls;
 
     public Task(int originFloor, int destinationFloor) {
         this.originFloor = originFloor;
@@ -20,8 +21,7 @@ public class Task implements Serializable {
             this.destFloorPeople = new TreeMap<>();
         else
             this.destFloorPeople = new TreeMap<>(Collections.reverseOrder());
-        this.destFloorPeople.put(destinationFloor, 1);
-        this.numCalls = 1;
+        this.destFloorPeople.put(destinationFloor, 1); //TODO: Random nr. of people instead of 1?
     }
 
     public Task getClone() {
@@ -35,6 +35,19 @@ public class Task implements Serializable {
 
     public String toString() {
         return originFloor + " " + destFloorPeople.keySet() + " " + destFloorPeople.values() + " " + getDirection();
+    }
+
+    public void setStartTime(long startTime) {
+        if(this.startTime == -1 || startTime < this.startTime)
+            this.startTime = startTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public double getWaitingTime() {
+        return this.endTime - this.startTime;
     }
 
     public TreeMap<Integer, Integer> getDestFloorPeople() {
@@ -79,14 +92,6 @@ public class Task implements Serializable {
 
     public int getNumAllPeople() {
         return destFloorPeople.values().stream().mapToInt(aNumPeople -> aNumPeople).sum();
-    }
-
-    public void incrementNumCalls() {
-        numCalls++;
-    }
-
-    public int getNumCalls() {
-        return numCalls;
     }
 
     public void removeTail() {
