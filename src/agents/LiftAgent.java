@@ -39,6 +39,7 @@ public class LiftAgent extends Agent implements Drawable {
     private Direction state = Direction.STOPPED;
     private int usageTime;
     private int noUsageTime;
+    private static int NANO_TO_S = 1000000000;
 
     public LiftAgent(int x, int y, int strategy, int max_capacity, Object2DGrid space) {
         this.x = x;
@@ -100,11 +101,11 @@ public class LiftAgent extends Agent implements Drawable {
     }
 
     public double getMaxWaitingTime() {
-        return maxCallTime/1000000000;
+        return maxCallTime/LiftAgent.NANO_TO_S;
     }
 
     public double getMinWaitingTime() {
-        return minCallTime/1000000000;
+        return minCallTime/LiftAgent.NANO_TO_S;
     }
 
     @Override
