@@ -8,11 +8,13 @@ import java.awt.*;
 public class Floor implements Drawable {
     private int x;
     private int y;
+    private final int lift_speed;
     private int counter = 0;
 
-    public Floor(int x, int y) {
+    public Floor(int x, int y, int lift_speed) {
         this.x = x;
         this.y = y;
+        this.lift_speed = lift_speed;
     }
 
     @Override
@@ -20,7 +22,7 @@ public class Floor implements Drawable {
         //TODO: Generalize this better
         if (counter > 0) {
             simGraphics.drawRect(Color.GREEN);
-            counter = (counter + 1) % 15; //For later reference: 15 = LIFT_VELOCITY
+            counter = (counter + 1) % lift_speed;
         } else
             simGraphics.drawRect(Color.RED);
     }
