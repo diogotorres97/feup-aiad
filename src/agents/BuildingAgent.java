@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Integer.max;
 
 public class BuildingAgent extends Agent {
     private int numFloors;
@@ -29,7 +30,7 @@ public class BuildingAgent extends Agent {
     private Vector<Floor> floors;
     private Object2DGrid space;
 
-    public BuildingAgent(int numFloors, int callStrategy, int lift_speed, Object2DGrid space) {
+    public BuildingAgent(int numFloors, int callStrategy, int lift_speed, int max_capacity, Object2DGrid space) {
         this.numFloors = numFloors;
         this.lifts = new Vector<>();
         this.space = space;
@@ -42,11 +43,11 @@ public class BuildingAgent extends Agent {
 
         switch (callStrategy) {
             case 0:
-                this.callStrategy = new MorningCallStrategy(numFloors);
+                this.callStrategy = new MorningCallStrategy(numFloors, max_capacity);
                 break;
             case 1:
             default:
-                this.callStrategy = new MidCallStrategy(numFloors);
+                this.callStrategy = new MidCallStrategy(numFloors, max_capacity);
                 break;
         }
     }

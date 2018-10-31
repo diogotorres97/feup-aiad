@@ -52,8 +52,8 @@ public class LiftAgent extends Agent implements Drawable {
         this.max_capacity = max_capacity;
         this.usageTime = 0;
         this.noUsageTime = 0;
-        this.minCallTime = Double.MAX_VALUE;
-        this.maxCallTime = Double.MIN_VALUE;
+        this.minCallTime = 1000;
+        this.maxCallTime = -1000;
         switch (strategy) {
             case 0:
                 this.evaluator = new Closest(this);
@@ -121,11 +121,11 @@ public class LiftAgent extends Agent implements Drawable {
     }
 
     public double getMaxWaitingTime() {
-        return maxCallTime / LiftAgent.NANO_TO_S;
+        return maxCallTime;
     }
 
     public double getMinWaitingTime() {
-        return minCallTime / LiftAgent.NANO_TO_S;
+        return minCallTime;
     }
 
     public int getTotalFloors() {
@@ -208,7 +208,8 @@ public class LiftAgent extends Agent implements Drawable {
 
     private void setEndAndUpdateMinMax() {
         currentTask.setEndTime(System.nanoTime());
-        double taskWaitingTime = currentTask.getWaitingTime();
+        double taskWaitingTime = currentTask.getWaitingTime() / NANO_TO_S;
+        System.out.println("TASK TIME:"+ taskWaitingTime);
         maxCallTime = Math.max(maxCallTime, taskWaitingTime);
         minCallTime = Math.min(minCallTime, taskWaitingTime);
     }

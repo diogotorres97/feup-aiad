@@ -15,13 +15,13 @@ public class Task implements Serializable {
 
     private TreeMap<Integer, Integer> destFloorPeople; //Key = destination floor, Value = nr. of people to drop off
 
-    public Task(int originFloor, int destinationFloor) {
+    public Task(int originFloor, int destinationFloor, int nr_people) {
         this.originFloor = originFloor;
         if (originFloor < destinationFloor)
             this.destFloorPeople = new TreeMap<>();
         else
             this.destFloorPeople = new TreeMap<>(Collections.reverseOrder());
-        this.destFloorPeople.put(destinationFloor, 1); //TODO: Random nr. of people instead of 1?
+        this.destFloorPeople.put(destinationFloor, nr_people);
     }
 
     public Task getClone() {

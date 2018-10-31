@@ -6,6 +6,7 @@ import java.util.Random;
 
 public abstract class CallStrategy {
     protected int numFloors;
+    protected int max_capacity;
     protected double PROB_BOTTOM_FLOOR_ORIGIN;
     protected double PROB_OTHER_FLOORS_ORIGIN;
     protected double PROB_BOTTOM_FLOOR_DEST;
@@ -38,6 +39,8 @@ public abstract class CallStrategy {
             destination = generateDestinationFloor();
         } while (destination == origin);
 
-        return new Task(origin, destination);
+        int nr_people = rng.nextInt(max_capacity) + 1;
+
+        return new Task(origin, destination, nr_people);
     }
 }

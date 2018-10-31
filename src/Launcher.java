@@ -111,12 +111,12 @@ public class Launcher extends Repast3Launcher {
                     -1, //Record all digits pre decimal separator
                     3); //Round to 3 digits post decimal separator
             recorder.addNumericDataSource(a.getLocalName() + "_usage_rate", a::getUsageRate, -1, 3);
-            recorder.addNumericDataSource(a.getLocalName() + "_min_call_time", a::getMinWaitingTime, 5, 3);
-            recorder.addNumericDataSource(a.getLocalName() + "_max_call_time", a::getMaxWaitingTime, 5, 3);
+            recorder.addNumericDataSource(a.getLocalName() + "_min_call_time", a::getMinWaitingTime, -1, 3);
+            recorder.addNumericDataSource(a.getLocalName() + "_max_call_time", a::getMaxWaitingTime, -1, 3);
         }
 
-        recorder.addNumericDataSource("global_min_call_time", () -> Collections.min(agentList.stream().map(LiftAgent::getMinWaitingTime).collect(Collectors.toList())), 5, 3);
-        recorder.addNumericDataSource("global_max_call_time", () -> Collections.max(agentList.stream().map(LiftAgent::getMaxWaitingTime).collect(Collectors.toList())), 5, 3);
+        recorder.addNumericDataSource("global_min_call_time", () -> Collections.min(agentList.stream().map(LiftAgent::getMinWaitingTime).collect(Collectors.toList())), -1, 3);
+        recorder.addNumericDataSource("global_max_call_time", () -> Collections.max(agentList.stream().map(LiftAgent::getMaxWaitingTime).collect(Collectors.toList())), -1, 3);
     }
 
     private void buildDisplay() {
@@ -185,7 +185,7 @@ public class Launcher extends Repast3Launcher {
             agentList.add(agent);
         }
 
-        building = new BuildingAgent(NUM_FLOORS, CALL_STRATEGY, LIFT_SPEED, space);
+        building = new BuildingAgent(NUM_FLOORS, CALL_STRATEGY, LIFT_SPEED, LIFT_MAX_CAPACITY, space);
         try {
             mainContainer.acceptNewAgent("spy", building).start();
         } catch (StaleProxyException e) {
