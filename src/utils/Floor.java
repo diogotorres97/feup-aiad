@@ -6,9 +6,9 @@ import uchicago.src.sim.gui.SimGraphics;
 import java.awt.*;
 
 public class Floor implements Drawable {
+    private final int lift_speed;
     private int x;
     private int y;
-    private final int lift_speed;
     private int counter = 0;
 
     public Floor(int x, int y, int lift_speed) {

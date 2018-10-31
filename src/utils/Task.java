@@ -38,7 +38,7 @@ public class Task implements Serializable {
     }
 
     public void setStartTime(long startTime) {
-        if(this.startTime == -1 || startTime < this.startTime)
+        if (this.startTime == -1 || startTime < this.startTime)
             this.startTime = startTime;
     }
 

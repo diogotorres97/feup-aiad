@@ -26,10 +26,11 @@ import java.util.Random;
 import java.util.TreeMap;
 
 public class LiftAgent extends Agent implements Drawable {
-    private double maxCallTime;
-    private double minCallTime;
+    private static int NANO_TO_S = 1000000000;
     private final int speed;
     private final int stop_time;
+    private double maxCallTime;
+    private double minCallTime;
     private int x;
     private int y;
     private Object2DGrid space;
@@ -41,7 +42,6 @@ public class LiftAgent extends Agent implements Drawable {
     private Direction state = Direction.STOPPED;
     private int usageTime;
     private int noUsageTime;
-    private static int NANO_TO_S = 1000000000;
 
     public LiftAgent(int x, int y, int speed, int stop_time, int strategy, int max_capacity, Object2DGrid space) {
         this.x = x;
@@ -117,17 +117,17 @@ public class LiftAgent extends Agent implements Drawable {
     }
 
     public double getUsageRate() {
-        return this.usageTime + this.noUsageTime == 0 ? 0 : this.usageTime*1.0/(this.usageTime+this.noUsageTime);
+        return this.usageTime + this.noUsageTime == 0 ? 0 : this.usageTime * 1.0 / (this.usageTime + this.noUsageTime);
     }
 
     public double getMaxWaitingTime() {
-        return maxCallTime/LiftAgent.NANO_TO_S;
+        return maxCallTime / LiftAgent.NANO_TO_S;
     }
 
     public double getMinWaitingTime() {
         return minCallTime / LiftAgent.NANO_TO_S;
     }
-      
+
     public int getTotalFloors() {
         return space.getSizeY() - 1;
     }
@@ -210,7 +210,7 @@ public class LiftAgent extends Agent implements Drawable {
         currentTask.setEndTime(System.nanoTime());
         double taskWaitingTime = currentTask.getWaitingTime();
         maxCallTime = Math.max(maxCallTime, taskWaitingTime);
-        minCallTime= Math.min(minCallTime, taskWaitingTime);
+        minCallTime = Math.min(minCallTime, taskWaitingTime);
     }
 
     private Task startTask(int algorithm) {
@@ -354,7 +354,7 @@ public class LiftAgent extends Agent implements Drawable {
             goingToOrigin = false;
         }
     }
-      
+
     public int getStopTime() {
         return stop_time;
     }

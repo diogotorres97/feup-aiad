@@ -8,9 +8,6 @@ import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
 import uchicago.src.reflector.ListPropertyDescriptor;
 import uchicago.src.sim.analysis.DataRecorder;
-import uchicago.src.sim.analysis.DataSource;
-import uchicago.src.sim.analysis.NumericDataSource;
-import uchicago.src.sim.analysis.ObjectDataSource;
 import uchicago.src.sim.engine.BasicAction;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
@@ -105,12 +102,12 @@ public class Launcher extends Repast3Launcher {
         launchAgents();
 
         recorder = new DataRecorder("./data.txt", this);
-        for(LiftAgent a : agentList) {
+        for (LiftAgent a : agentList) {
             recorder.addNumericDataSource(a.getLocalName() + "_ocupation", () -> {
-                if(a.getCurrentTask() != null && !a.isGoingToOrigin())
-                    return a.getCurrentTask().getNumAllPeople()*1.0/LIFT_MAX_CAPACITY;
-                return 0;
-            },
+                        if (a.getCurrentTask() != null && !a.isGoingToOrigin())
+                            return a.getCurrentTask().getNumAllPeople() * 1.0 / LIFT_MAX_CAPACITY;
+                        return 0;
+                    },
                     -1, //Record all digits pre decimal separator
                     3); //Round to 3 digits post decimal separator
             recorder.addNumericDataSource(a.getLocalName() + "_usage_rate", a::getUsageRate, -1, 3);
