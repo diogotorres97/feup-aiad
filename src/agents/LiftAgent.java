@@ -28,6 +28,8 @@ import java.util.TreeMap;
 public class LiftAgent extends Agent implements Drawable {
     private double maxCallTime;
     private double minCallTime;
+    private final int speed;
+    private final int stop_time;
     private int x;
     private int y;
     private Object2DGrid space;
@@ -40,9 +42,11 @@ public class LiftAgent extends Agent implements Drawable {
     private int usageTime;
     private int noUsageTime;
 
-    public LiftAgent(int x, int y, int strategy, int max_capacity, Object2DGrid space) {
+    public LiftAgent(int x, int y, int speed, int stop_time, int strategy, int max_capacity, Object2DGrid space) {
         this.x = x;
         this.y = y;
+        this.speed = speed;
+        this.stop_time = stop_time;
         this.space = space;
         this.max_capacity = max_capacity;
         this.usageTime = 0;
@@ -60,6 +64,22 @@ public class LiftAgent extends Agent implements Drawable {
             default:
                 this.evaluator = new SmallestTimeNumpad(this);
         }
+    }
+
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
+
+    public Task getCurrentTask() {
+        return currentTask;
+    }
+
+    public boolean isGoingToOrigin() {
+        return goingToOrigin;
+    }
+
+    public Direction getState() {
+        return state;
     }
 
     @Override
@@ -105,6 +125,9 @@ public class LiftAgent extends Agent implements Drawable {
 
     public double getMinWaitingTime() {
         return minCallTime/1000000000;
+      
+    public int getTotalFloors() {
+        return space.getSizeY() - 1;
     }
 
     @Override
@@ -329,7 +352,7 @@ public class LiftAgent extends Agent implements Drawable {
             goingToOrigin = false;
         }
     }
-
+      
     public Task getCurrentTask() {
         return currentTask;
     }
@@ -340,6 +363,13 @@ public class LiftAgent extends Agent implements Drawable {
 
     public ArrayList<Task> getTasks() {
         return tasks;
+      
+    public int getStopTime() {
+        return stop_time;
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     class CallAnswerer extends ContractNetResponder {
