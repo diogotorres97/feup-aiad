@@ -127,6 +127,7 @@ public class LiftAgent extends Agent implements Drawable {
                 System.out.println(getLocalName() + " joined tasks: " + t + " and " + task);
                 if (t.getDestinationFloor() != task.getDestinationFloor()) {
                     t.addDestinationFloor(task.getDestinationFloor(), task.getNumPeople());
+                    //TODO: Delete this calls shit
                     t.incrementNumCalls();
                 } else {
                     t.setNumPeople(t.getNumPeople() + task.getNumPeople());

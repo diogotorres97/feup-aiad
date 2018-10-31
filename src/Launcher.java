@@ -105,7 +105,7 @@ public class Launcher extends Repast3Launcher {
         for(LiftAgent a : agentList) {
             recorder.addNumericDataSource(a.getLocalName() + "_ocupation", () -> {
                 if(a.getCurrentTask() != null && !a.isGoingToOrigin())
-                    return a.getCurrentTask().getNumPeople()*1.0/LIFT_MAX_CAPACITY; //TODO: Is it correct or should be getNumAllPeople()?
+                    return a.getCurrentTask().getNumAllPeople()*1.0/LIFT_MAX_CAPACITY;
                 return 0;
             },
                     -1, //Record all digits pre decimal separator
