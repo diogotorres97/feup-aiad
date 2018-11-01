@@ -299,7 +299,7 @@ public class LiftAgent extends Agent implements Drawable {
             int nTries = 0;
 
             do {
-                int randomFloor = currentTask.getDestinations().get(seed.nextInt(currentTask.getDestFloorPeopleSize())); //Pick a random floor
+                int randomFloor = futureTask.getDestinations().get(seed.nextInt(futureTask.getDestFloorPeopleSize())); //Pick a random floor
                 TreeMap<Integer, Integer> currentTaskDestMap = currentTask.getDestFloorPeople();
                 TreeMap<Integer, Integer> futureTaskDestMap = futureTask.getDestFloorPeople();
 
