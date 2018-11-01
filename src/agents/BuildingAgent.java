@@ -115,7 +115,7 @@ public class BuildingAgent extends Agent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        floors.get(task.getOriginFloor()).activate();
+        floors.get(task.getOriginFloor()).activate(task.getDirection());
         addBehaviour(new CallGenerator(this, msg));
     }
 
