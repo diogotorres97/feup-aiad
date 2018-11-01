@@ -2,8 +2,6 @@ package utils;
 
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
-
-import javax.swing.text.Style;
 import java.awt.*;
 
 public class Floor implements Drawable {
@@ -24,8 +22,9 @@ public class Floor implements Drawable {
     public void draw(SimGraphics simGraphics) {
         simGraphics.setFont(new Font("Arial", Font.BOLD, 40));
         if (counter > 0) {
-            //simGraphics.drawRect(Color.GREEN);
-            simGraphics.drawStringInRect(Color.GREEN,Color.BLUE,this.direction == Direction.DOWN ? "v" : "^");
+            simGraphics.drawRect(this.direction == Direction.DOWN ? Color.GREEN : Color.BLUE);
+            //simGraphics.drawStringInRect(Color.GREEN,Color.BLUE,this.direction == Direction.DOWN ? "v" : "^");
+            simGraphics.drawString("ALIVE", Color.BLUE);
             counter = (counter + 1) % lift_speed;
         } else
             simGraphics.drawRect(Color.RED);
