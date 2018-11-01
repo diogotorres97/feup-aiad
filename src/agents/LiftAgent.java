@@ -124,6 +124,12 @@ public class LiftAgent extends Agent implements Drawable {
         return this.usageTime + this.noUsageTime == 0 ? 0 : this.usageTime * 1.0 / (this.usageTime + this.noUsageTime);
     }
 
+    public double getOccupationRatio() {
+        if (currentTask != null && !goingToOrigin)
+            return currentTask.getNumAllPeople() * 1.0 / max_capacity;
+        return 0;
+    }
+
     public double getMaxWaitingTime() {
         return maxCallTime;
     }
@@ -202,7 +208,7 @@ public class LiftAgent extends Agent implements Drawable {
             findState(currentTask);
             if (currentTask.getOriginFloor() == getCurrentFloor()) { // Check if the lift got to the origin floor
                 setEndAndUpdateMinMax();
-                futureTask = startTask(1);
+                futureTask = startTask();
             }
         } else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
             endTask();
@@ -227,67 +233,7 @@ public class LiftAgent extends Agent implements Drawable {
         minCallTime = Math.min(minCallTime, taskWaitingTime);
     }
 
-    private Task startTask(int algorithm) {
-        Task futureTask;
-        switch (algorithm) {
-            case 0:
-                futureTask = pickFromFirstDestination();
-                break;
-            default:
-                futureTask = pickRandomly();
-                break;
-
-        }
-        return futureTask;
-    }
-
-    private Task pickFromFirstDestination() {
-        Task futureTask;
-
-        if (currentTask.getNumAllPeople() > max_capacity) {
-            System.out.println("Insufficient capacity for " + currentTask + ", making new request");
-            futureTask = currentTask.getClone();
-
-            if (currentTask.getNumPeople() > max_capacity) { //first we transport the people for the first destination
-                currentTask.setNumPeople(max_capacity); //Number of people that i can transport
-                currentTask.removeTail(); //remove the rest of destinations of current task
-                futureTask.setNumPeople(currentTask.getNumPeople() - max_capacity); //number of people left outside
-            } else {
-                // everyone from the first destination got on the lift, fill the lift and make new call for the rest
-                int numberOfPeople = currentTask.getNumPeople();
-                futureTask.removeDestinationFloor();
-                currentTask.removeTail();
-                TreeMap<Integer, Integer> futureTaskDestMap = futureTask.getDestFloorPeople();
-
-                for (int key : futureTaskDestMap.keySet()) {
-                    if (futureTaskDestMap.get(key) + numberOfPeople > max_capacity) {
-                        int leftPeople = (futureTaskDestMap.get(key) + numberOfPeople) - max_capacity;
-                        currentTask.addDestinationFloor(key, futureTaskDestMap.get(key) - leftPeople);
-
-                        if (leftPeople > 0) {
-                            futureTaskDestMap.put(key, leftPeople);
-                        } else {
-                            futureTaskDestMap.remove(key);
-                        }
-                        break;
-                    } else {
-                        numberOfPeople += futureTaskDestMap.get(key);
-                        currentTask.addDestinationFloor(key, futureTaskDestMap.get(key));
-                        futureTaskDestMap.remove(key);
-                    }
-                }
-
-                if (futureTask.getDestinations().isEmpty())
-                    return null;
-            }
-
-            return futureTask; // Send new request if not all people got in
-        }
-
-        return null;
-    }
-
-    private Task pickRandomly() {
+    private Task startTask() {
         Task futureTask;
 
         if (currentTask.getNumAllPeople() > max_capacity) {

@@ -101,13 +101,9 @@ public class Launcher extends Repast3Launcher {
 
         recorder = new DataRecorder("./data.txt", this);
         for (LiftAgent a : agentList) {
-            recorder.addNumericDataSource(a.getLocalName() + "_ocupation", () -> {
-                        if (a.getCurrentTask() != null && !a.isGoingToOrigin())
-                            return a.getCurrentTask().getNumAllPeople() * 1.0 / LIFT_MAX_CAPACITY;
-                        return 0;
-                    },
-                    -1, //Record all digits pre decimal separator
-                    3); //Round to 3 digits post decimal separator
+            //3nd parameter - Record all digits pre decimal separator
+            //4nd parameter - Round to 3 digits post decimal separator
+            recorder.addNumericDataSource(a.getLocalName() + "_occupation", a::getOccupationRatio, -1, 3);
             recorder.addNumericDataSource(a.getLocalName() + "_usage_rate", a::getUsageRate, -1, 3);
             recorder.addNumericDataSource(a.getLocalName() + "_min_call_time", a::getMinWaitingTime, -1, 3);
             recorder.addNumericDataSource(a.getLocalName() + "_max_call_time", a::getMaxWaitingTime, -1, 3);
@@ -116,6 +112,7 @@ public class Launcher extends Repast3Launcher {
         recorder.addNumericDataSource("global_min_call_time", () -> Collections.min(agentList.stream().map(LiftAgent::getMinWaitingTime).collect(Collectors.toList())), -1, 3);
         recorder.addNumericDataSource("global_max_call_time", () -> Collections.max(agentList.stream().map(LiftAgent::getMaxWaitingTime).collect(Collectors.toList())), -1, 3);
     }
+
 
     private void buildDisplay() {
         // create displays, charts
