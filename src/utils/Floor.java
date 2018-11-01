@@ -12,13 +12,8 @@ import java.io.IOException;
 public class Floor implements Drawable {
     private static BufferedImage up = null;
     private static BufferedImage down = null;
-    private int lift_speed;
-    private int x;
-    private int y;
-    private int counter = 0;
-    private Direction direction;
 
-    static{
+    static {
         try {
             up = ImageIO.read(new File("assets/up.png"));
             down = ImageIO.read(new File("assets/down.png"));
@@ -26,6 +21,12 @@ public class Floor implements Drawable {
             e.printStackTrace();
         }
     }
+
+    private int lift_speed;
+    private int x;
+    private int y;
+    private int counter = 0;
+    private Direction direction;
 
     public Floor(int x, int y, int lift_speed) {
         this.x = x;
