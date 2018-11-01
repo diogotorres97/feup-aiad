@@ -1,5 +1,6 @@
 package agents;
 
+import jade.core.AID;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
@@ -8,6 +9,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import sajas.core.Agent;
 import sajas.domain.DFService;
+import sajas.proto.AchieveREInitiator;
 import sajas.proto.ContractNetResponder;
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.Vector;
 
 public class LiftAgent extends Agent implements Drawable {
     private static int NANO_TO_S = 1000000000;
@@ -42,6 +45,7 @@ public class LiftAgent extends Agent implements Drawable {
     private Direction state = Direction.STOPPED;
     private int usageTime;
     private int noUsageTime;
+    private AID building = null;
 
     public LiftAgent(int x, int y, int speed, int stop_time, int strategy, int max_capacity, Object2DGrid space) {
         this.x = x;
@@ -177,13 +181,14 @@ public class LiftAgent extends Agent implements Drawable {
         tasks.add(task);
     }
 
-    public Task executeTasks() {
+    public void executeTasks() {
+        Task futureTask = null;
         if (tasks.isEmpty()) { //If no more tasks then stop
             ++this.noUsageTime;
             state = Direction.STOPPED;
             goingToOrigin = false;
             currentTask = null;
-            return null;
+            return;
         }
 
         ++this.usageTime;
@@ -197,19 +202,27 @@ public class LiftAgent extends Agent implements Drawable {
             findState(currentTask);
             if (currentTask.getOriginFloor() == getCurrentFloor()) { // Check if the lift got to the origin floor
                 setEndAndUpdateMinMax();
-                return startTask(1);
+                futureTask = startTask(1);
             }
         } else if (currentTask.getDestinationFloor() == getCurrentFloor()) {
             endTask();
         }
 
-        return null;
+        if (futureTask != null) {
+            ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+            try {
+                msg.setContentObject(futureTask);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            addBehaviour(new CallReRequester(this, msg));
+        }
     }
 
     private void setEndAndUpdateMinMax() {
         currentTask.setEndTime(System.nanoTime());
         double taskWaitingTime = currentTask.getWaitingTime() / NANO_TO_S;
-        System.out.println("TASK TIME:"+ taskWaitingTime);
+        System.out.println("TASK TIME:" + taskWaitingTime);
         maxCallTime = Math.max(maxCallTime, taskWaitingTime);
         minCallTime = Math.min(minCallTime, taskWaitingTime);
     }
@@ -286,11 +299,11 @@ public class LiftAgent extends Agent implements Drawable {
             int nTries = 0;
 
             do {
-                int randomFloor = currentTask.getDestinations().get(seed.nextInt(currentTask.getDestFloorPeopleSize())); //Pick a random floor
+                int randomFloor = futureTask.getDestinations().get(seed.nextInt(futureTask.getDestFloorPeopleSize())); //Pick a random floor
                 TreeMap<Integer, Integer> currentTaskDestMap = currentTask.getDestFloorPeople();
                 TreeMap<Integer, Integer> futureTaskDestMap = futureTask.getDestFloorPeople();
 
-                int randomPeople = seed.nextInt(currentTaskDestMap.get(randomFloor)); //Pick a random number of people of that floor
+                int randomPeople = seed.nextInt(currentTaskDestMap.get(randomFloor)) + 1; //Pick a random number of people of that floor
                 int leftTotalPeopleDestination;
 
                 //Fill the lift
@@ -372,6 +385,8 @@ public class LiftAgent extends Agent implements Drawable {
 
         @Override
         protected ACLMessage handleCfp(ACLMessage cfp) {
+            LiftAgent a = (LiftAgent) myAgent;
+            if (a.building == null) a.building = cfp.getSender();
             Task task = null;
             try {
                 task = (Task) cfp.getContentObject();
@@ -404,13 +419,41 @@ public class LiftAgent extends Agent implements Drawable {
                 e.printStackTrace();
             }
 
-            //TODO: Inform now?? Can't afford (?) to wait for task to end
             ACLMessage result = accept.createReply();
             result.setPerformative(ACLMessage.INFORM);
-            result.setContent("this is the result");
+            result.setContent("Will be done");
 
             return result;
         }
 
     }
+
+    class CallReRequester extends AchieveREInitiator {
+
+        public CallReRequester(Agent a, ACLMessage msg) {
+            super(a, msg);
+        }
+
+        protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
+            Vector<ACLMessage> v = new Vector<>();
+            v.add(msg);
+            return v;
+        }
+
+        protected void handleAgree(ACLMessage agree) {
+            System.out.println(getLocalName() + ": Building agreed to make call");
+        }
+
+        protected void handleRefuse(ACLMessage refuse) {
+        }
+
+        protected void handleInform(ACLMessage inform) {
+            System.out.println(getLocalName() + ": Building will make call");
+        }
+
+        protected void handleFailure(ACLMessage failure) {
+        }
+
+    }
+
 }

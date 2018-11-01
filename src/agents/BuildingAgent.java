@@ -5,9 +5,11 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import sajas.core.Agent;
 import sajas.domain.DFService;
+import sajas.proto.AchieveREResponder;
 import sajas.proto.ContractNetInitiator;
 import sajas.proto.SubscriptionInitiator;
 import uchicago.src.sim.space.Object2DGrid;
@@ -21,7 +23,6 @@ import java.io.IOException;
 import java.util.Vector;
 
 import static java.lang.Integer.MAX_VALUE;
-import static java.lang.Integer.max;
 
 public class BuildingAgent extends Agent {
     private int numFloors;
@@ -29,12 +30,14 @@ public class BuildingAgent extends Agent {
     private Vector<AID> lifts;
     private Vector<Floor> floors;
     private Object2DGrid space;
+    private Vector<Task> newTasks;
 
     public BuildingAgent(int numFloors, int callStrategy, int lift_speed, int max_capacity, Object2DGrid space) {
         this.numFloors = numFloors;
         this.lifts = new Vector<>();
         this.space = space;
         this.floors = new Vector<>(numFloors);
+        this.newTasks = new Vector<>();
         for (int i = 0; i < numFloors; ++i) {
             Floor floor = new Floor(0, numFloors - 1 - i, lift_speed);
             this.floors.add(floor);
@@ -56,7 +59,12 @@ public class BuildingAgent extends Agent {
     protected void setup() {
         initialLiftAgentSearch();
         liftAgentSubscription();
+        recaller();
         System.out.println("Setting up building");
+    }
+
+    private void recaller() {
+        addBehaviour(new Recaller(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
     }
 
     private DFAgentDescription getDFAgentDescriptionTemplate() {
@@ -89,20 +97,15 @@ public class BuildingAgent extends Agent {
         System.out.println("Taking down");
     }
 
-    public int getNumFloors() {
-        return numFloors;
-    }
-
-    public void setNumFloors(int numFloors) {
-        this.numFloors = numFloors;
-    }
-
     private Vector<AID> getLifts() {
         return lifts;
     }
 
     public void newCall() {
-        newCall(callStrategy.generateTask());
+        if (newTasks.isEmpty())
+            newCall(callStrategy.generateTask());
+        else
+            newCall(newTasks.remove(0));
     }
 
     public void newCall(Task task) {
@@ -199,5 +202,31 @@ public class BuildingAgent extends Agent {
                 fe.printStackTrace();
             }
         }
+    }
+
+    class Recaller extends AchieveREResponder {
+
+        public Recaller(Agent a, MessageTemplate mt) {
+            super(a, mt);
+        }
+
+        protected ACLMessage handleRequest(ACLMessage request) {
+            try {
+                Task task = (Task) request.getContentObject();
+                ((BuildingAgent) myAgent).newTasks.add(task);
+            } catch (UnreadableException e) {
+                e.printStackTrace();
+            }
+            ACLMessage reply = request.createReply();
+            reply.setPerformative(ACLMessage.AGREE);
+            return reply;
+        }
+
+        protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
+            ACLMessage result = request.createReply();
+            // ...
+            return result;
+        }
+
     }
 }

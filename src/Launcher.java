@@ -14,7 +14,6 @@ import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Object2DDisplay;
 import uchicago.src.sim.space.Object2DGrid;
-import utils.Task;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ public class Launcher extends Repast3Launcher {
     private ArrayList<LiftAgent> agentList;
 
     private BuildingAgent building;
-    private ArrayList<Task> newCalls = new ArrayList<>();
 
     private DataRecorder recorder;
 
@@ -135,12 +133,7 @@ public class Launcher extends Repast3Launcher {
         getSchedule().scheduleActionAtInterval(CALL_FREQUENCY, new BasicAction() {
             @Override
             public void execute() {
-                if (!newCalls.isEmpty()) {
-                    building.newCall(newCalls.get(0));
-                    newCalls.remove(0);
-                } else {
-                    building.newCall();
-                }
+                building.newCall();
             }
         });
         getSchedule().scheduleActionAtInterval(LIFT_SPEED, new BasicAction() {
@@ -148,9 +141,7 @@ public class Launcher extends Repast3Launcher {
             public void execute() {
                 for (LiftAgent agent : agentList) {
                     agent.updatePosition();
-                    Task futureTask = agent.executeTasks();
-                    if (futureTask != null)
-                        newCalls.add(futureTask);
+                    agent.executeTasks();
                 }
             }
         });
