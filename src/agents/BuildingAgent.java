@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.Vector;
 
 import static java.lang.Integer.MAX_VALUE;
-import static java.lang.Integer.max;
 
 public class BuildingAgent extends Agent {
     private int numFloors;
@@ -103,7 +102,7 @@ public class BuildingAgent extends Agent {
     }
 
     public void newCall() {
-        if(newTasks.isEmpty())
+        if (newTasks.isEmpty())
             newCall(callStrategy.generateTask());
         else
             newCall(newTasks.remove(0));
@@ -213,8 +212,8 @@ public class BuildingAgent extends Agent {
 
         protected ACLMessage handleRequest(ACLMessage request) {
             try {
-                Task task = (Task)request.getContentObject();
-                ((BuildingAgent)myAgent).newTasks.add(task);
+                Task task = (Task) request.getContentObject();
+                ((BuildingAgent) myAgent).newTasks.add(task);
             } catch (UnreadableException e) {
                 e.printStackTrace();
             }

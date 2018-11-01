@@ -24,13 +24,23 @@ public class Task implements Serializable {
         this.destFloorPeople.put(destinationFloor, nr_people);
     }
 
-    public Task getClone() {
-        try {
-            return (Task) this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+    public Task(Task other) {
+        this.originFloor = other.originFloor;
+        this.startTime = other.startTime;
+        this.endTime = other.endTime;
+        int dest = other.destFloorPeople.firstKey();
+        if (originFloor < dest)
+            this.destFloorPeople = new TreeMap<>();
+        else
+            this.destFloorPeople = new TreeMap<>(Collections.reverseOrder());
+        for (Integer i : other.destFloorPeople.keySet()) {
+            Integer j = other.destFloorPeople.get(i);
+            this.destFloorPeople.put(i, j);
         }
-        return null;
+    }
+
+    public Task getClone() {
+        return new Task(this);
     }
 
     public String toString() {

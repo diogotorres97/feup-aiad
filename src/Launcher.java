@@ -14,7 +14,6 @@ import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Object2DDisplay;
 import uchicago.src.sim.space.Object2DGrid;
-import utils.Task;
 
 import java.awt.*;
 import java.util.ArrayList;
