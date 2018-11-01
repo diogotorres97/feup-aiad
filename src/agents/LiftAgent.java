@@ -153,7 +153,10 @@ public class LiftAgent extends Agent implements Drawable {
 
     @Override
     public void draw(SimGraphics simGraphics) {
-        simGraphics.drawRect(Color.BLUE);
+        if (currentTask != null && getCurrentFloor() == currentTask.getOriginFloor())
+            simGraphics.drawRect(Color.BLACK);
+        else
+            simGraphics.drawRect(Color.BLUE);
     }
 
     @Override
