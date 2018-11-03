@@ -46,6 +46,7 @@ public class LiftAgent extends Agent implements Drawable {
     private int usageTime;
     private int noUsageTime;
     private AID building = null;
+    private long totalTaskTime;
 
     public LiftAgent(int x, int y, int speed, int stop_time, int strategy, int max_capacity, Object2DGrid space) {
         this.x = x;
@@ -58,6 +59,7 @@ public class LiftAgent extends Agent implements Drawable {
         this.noUsageTime = 0;
         this.minCallTime = 1000;
         this.maxCallTime = -1000;
+        this.totalTaskTime = 0;
         switch (strategy) {
             case 0:
                 this.evaluator = new Closest(this);
@@ -232,8 +234,13 @@ public class LiftAgent extends Agent implements Drawable {
         currentTask.setEndTime(System.nanoTime());
         double taskWaitingTime = currentTask.getWaitingTime() / NANO_TO_S;
         System.out.println("TASK TIME:" + taskWaitingTime);
+        this.totalTaskTime += taskWaitingTime;
         maxCallTime = Math.max(maxCallTime, taskWaitingTime);
         minCallTime = Math.min(minCallTime, taskWaitingTime);
+    }
+
+    public long getTotalTaskTime() {
+        return totalTaskTime;
     }
 
     private Task startTask() {
