@@ -31,6 +31,7 @@ public class BuildingAgent extends Agent {
     private Vector<Floor> floors;
     private Object2DGrid space;
     private Vector<Task> newTasks;
+    private int totalCalls;
 
     public BuildingAgent(int numFloors, int callStrategy, int lift_speed, int max_capacity, Object2DGrid space) {
         this.numFloors = numFloors;
@@ -38,6 +39,7 @@ public class BuildingAgent extends Agent {
         this.space = space;
         this.floors = new Vector<>(numFloors);
         this.newTasks = new Vector<>();
+        this.totalCalls = 0;
         for (int i = 0; i < numFloors; ++i) {
             Floor floor = new Floor(0, numFloors - 1 - i, lift_speed);
             this.floors.add(floor);
@@ -102,10 +104,15 @@ public class BuildingAgent extends Agent {
     }
 
     public void newCall() {
+        ++totalCalls;
         if (newTasks.isEmpty())
             newCall(callStrategy.generateTask());
         else
             newCall(newTasks.remove(0));
+    }
+
+    public int getTotalCalls() {
+        return totalCalls;
     }
 
     public void newCall(Task task) {
