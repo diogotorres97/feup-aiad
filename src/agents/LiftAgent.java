@@ -188,7 +188,7 @@ public class LiftAgent extends Agent implements Drawable {
         tasks.add(task);
     }
 
-    //Function responsible
+    //Function responsible for checking current task progress and trigger start/end task mechanisms accordingly (pick up/let off)
     public void executeTasks() {
         Task futureTask = null;
         if (tasks.isEmpty()) { //If no more tasks then stop
