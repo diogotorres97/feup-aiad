@@ -6,9 +6,9 @@ import utils.Task;
 
 public abstract class SmallestTime extends CallEvaluation {
 
-    protected boolean numpad;
+    boolean numpad;
 
-    public SmallestTime(LiftAgent agent) {
+    SmallestTime(LiftAgent agent) {
         super(agent);
     }
 

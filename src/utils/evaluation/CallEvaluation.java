@@ -4,9 +4,9 @@ import agents.LiftAgent;
 import utils.Task;
 
 public abstract class CallEvaluation {
-    protected LiftAgent agent;
+    LiftAgent agent;
 
-    public CallEvaluation(LiftAgent agent) {
+    CallEvaluation(LiftAgent agent) {
         this.agent = agent;
     }
 

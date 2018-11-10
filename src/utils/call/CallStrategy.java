@@ -5,12 +5,12 @@ import utils.Task;
 import java.util.Random;
 
 public abstract class CallStrategy {
-    protected int numFloors;
-    protected int max_capacity;
-    protected double PROB_BOTTOM_FLOOR_ORIGIN;
-    protected double PROB_OTHER_FLOORS_ORIGIN;
-    protected double PROB_BOTTOM_FLOOR_DEST;
-    protected double PROB_OTHER_FLOORS_DEST;
+    int numFloors;
+    int max_capacity;
+    double PROB_BOTTOM_FLOOR_ORIGIN;
+    double PROB_OTHER_FLOORS_ORIGIN;
+    double PROB_BOTTOM_FLOOR_DEST;
+    double PROB_OTHER_FLOORS_DEST;
     Random rng;
 
     private int generateOriginFloor() {

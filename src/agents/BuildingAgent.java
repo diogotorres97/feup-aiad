@@ -25,7 +25,6 @@ import java.util.Vector;
 import static java.lang.Integer.MAX_VALUE;
 
 public class BuildingAgent extends Agent {
-    private int numFloors;
     private CallStrategy callStrategy;
     private Vector<AID> lifts;
     private Vector<Floor> floors;
@@ -34,7 +33,6 @@ public class BuildingAgent extends Agent {
     private int totalCalls;
 
     public BuildingAgent(int numFloors, int callStrategy, int lift_speed, int max_capacity, Object2DGrid space) {
-        this.numFloors = numFloors;
         this.lifts = new Vector<>();
         this.space = space;
         this.floors = new Vector<>(numFloors);
@@ -62,9 +60,9 @@ public class BuildingAgent extends Agent {
         initialLiftAgentSearch();
         liftAgentSubscription();
         recaller();
-        System.out.println("Setting up building");
     }
 
+    //Initiates task reallocation behavior
     private void recaller() {
         addBehaviour(new Recaller(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
     }
@@ -96,13 +94,14 @@ public class BuildingAgent extends Agent {
 
     @Override
     protected void takeDown() {
-        System.out.println("Taking down");
+        System.out.println("Taking down building");
     }
 
     private Vector<AID> getLifts() {
         return lifts;
     }
 
+    //New task initiators: responsible for running the allocation protocol
     public void newCall() {
         ++totalCalls;
         if (newTasks.isEmpty())
@@ -111,11 +110,7 @@ public class BuildingAgent extends Agent {
             newCall(newTasks.remove(0));
     }
 
-    public int getTotalCalls() {
-        return totalCalls;
-    }
-
-    public void newCall(Task task) {
+    private void newCall(Task task) {
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         try {
             msg.setContentObject(task);
@@ -126,9 +121,14 @@ public class BuildingAgent extends Agent {
         addBehaviour(new CallGenerator(this, msg));
     }
 
+    public int getTotalCalls() {
+        return totalCalls;
+    }
+
+    //Private class responsible for task allocation
     private class CallGenerator extends ContractNetInitiator {
 
-        public CallGenerator(Agent a, ACLMessage msg) {
+        CallGenerator(Agent a, ACLMessage msg) {
             super(a, msg);
         }
 
@@ -146,9 +146,6 @@ public class BuildingAgent extends Agent {
 
         @Override
         protected void handleAllResponses(Vector responses, Vector acceptances) {
-
-            //System.out.println("got " + responses.size() + " responses!");
-
             //Get min
             int min = MAX_VALUE;
             for (Object response : responses) {
@@ -187,6 +184,8 @@ public class BuildingAgent extends Agent {
         }
     }
 
+
+    //Private class responsible for being alert to late new agents
     private class LiftAgentSubscription extends SubscriptionInitiator {
 
         LiftAgentSubscription(Agent agent, DFAgentDescription dfad) {
@@ -211,27 +210,31 @@ public class BuildingAgent extends Agent {
         }
     }
 
+
+    //Private class responsible for reallocating tasks
     class Recaller extends AchieveREResponder {
 
-        public Recaller(Agent a, MessageTemplate mt) {
+        Recaller(Agent a, MessageTemplate mt) {
             super(a, mt);
         }
 
         protected ACLMessage handleRequest(ACLMessage request) {
+            ACLMessage reply = request.createReply();
+            reply.setPerformative(ACLMessage.AGREE);
+
             try {
                 Task task = (Task) request.getContentObject();
                 ((BuildingAgent) myAgent).newTasks.add(task);
             } catch (UnreadableException e) {
                 e.printStackTrace();
             }
-            ACLMessage reply = request.createReply();
-            reply.setPerformative(ACLMessage.AGREE);
+
             return reply;
         }
 
         protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
             ACLMessage result = request.createReply();
-            // ...
+            result.setContent("It is done");
             return result;
         }
 

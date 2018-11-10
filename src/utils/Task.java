@@ -24,7 +24,7 @@ public class Task implements Serializable {
         this.destFloorPeople.put(destinationFloor, nr_people);
     }
 
-    public Task(Task other) {
+    private Task(Task other) {
         this.originFloor = other.originFloor;
         this.startTime = other.startTime;
         this.endTime = other.endTime;
@@ -102,12 +102,6 @@ public class Task implements Serializable {
 
     public int getNumAllPeople() {
         return destFloorPeople.values().stream().mapToInt(aNumPeople -> aNumPeople).sum();
-    }
-
-    public void removeTail() {
-        Map.Entry<Integer, Integer> temp = destFloorPeople.firstEntry();
-        destFloorPeople.clear();
-        destFloorPeople.put(temp.getKey(), temp.getValue());
     }
 
     public boolean similarTo(Task t) {

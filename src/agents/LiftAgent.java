@@ -85,10 +85,6 @@ public class LiftAgent extends Agent implements Drawable {
         return goingToOrigin;
     }
 
-    public Direction getState() {
-        return state;
-    }
-
     @Override
     protected void setup() {
         //Register as a lift so building can later find out about it at runtime
@@ -103,7 +99,7 @@ public class LiftAgent extends Agent implements Drawable {
         } catch (FIPAException fe) {
             fe.printStackTrace();
         }
-        //System.out.println("Lift registered!");
+
         addBehaviour(new CallAnswerer(this, MessageTemplate.MatchPerformative(ACLMessage.CFP)));
     }
 
@@ -192,6 +188,7 @@ public class LiftAgent extends Agent implements Drawable {
         tasks.add(task);
     }
 
+    //Function responsible
     public void executeTasks() {
         Task futureTask = null;
         if (tasks.isEmpty()) { //If no more tasks then stop
@@ -243,6 +240,8 @@ public class LiftAgent extends Agent implements Drawable {
         return totalTaskTime;
     }
 
+    //When lift gets to current task origin, this function tries to pick up all the people and deals with overcapacity accordingly
+    //(picks random people until full and sends remaining task to building)
     private Task startTask() {
         Task futureTask;
 
@@ -284,7 +283,7 @@ public class LiftAgent extends Agent implements Drawable {
                     futureTaskDestMap.remove(randomFloor);
                 }
 
-                if (futureTaskDestMap.isEmpty()) //If doesnt exist more destination floors dont send new task to building
+                if (futureTaskDestMap.isEmpty()) //If no more more destination floors, no need to resend task to building
                     return null;
 
             } while (numberOfPeople < max_capacity && ++nTries < 5);
@@ -333,6 +332,8 @@ public class LiftAgent extends Agent implements Drawable {
         return speed;
     }
 
+
+    //Private class responsible for answering task allocation protocol
     class CallAnswerer extends ContractNetResponder {
 
         CallAnswerer(Agent a, MessageTemplate mt) {
@@ -349,7 +350,7 @@ public class LiftAgent extends Agent implements Drawable {
             } catch (UnreadableException e) {
                 e.printStackTrace();
             }
-            //System.out.println(getLocalName() + " got request for task: " + task.getOriginFloor() + "|" + task.getDestinationFloor());
+
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
             try {
@@ -384,9 +385,11 @@ public class LiftAgent extends Agent implements Drawable {
 
     }
 
+
+    //Private class responsible for sending tasks back to building to be reallocated
     class CallReRequester extends AchieveREInitiator {
 
-        public CallReRequester(Agent a, ACLMessage msg) {
+        CallReRequester(Agent a, ACLMessage msg) {
             super(a, msg);
         }
 
@@ -401,6 +404,7 @@ public class LiftAgent extends Agent implements Drawable {
         }
 
         protected void handleRefuse(ACLMessage refuse) {
+            //Should never happen
         }
 
         protected void handleInform(ACLMessage inform) {
@@ -408,6 +412,7 @@ public class LiftAgent extends Agent implements Drawable {
         }
 
         protected void handleFailure(ACLMessage failure) {
+            //Should never happen
         }
 
     }

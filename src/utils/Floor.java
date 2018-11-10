@@ -37,7 +37,6 @@ public class Floor implements Drawable {
 
     @Override
     public void draw(SimGraphics simGraphics) {
-        simGraphics.setFont(new Font("Arial", Font.BOLD, 40));
         if (counter > 0) {
             simGraphics.drawImageToFit(direction == Direction.DOWN ? Floor.down : Floor.up);
             counter = (counter + 1) % lift_speed;

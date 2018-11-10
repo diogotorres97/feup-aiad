@@ -93,8 +93,6 @@ public class Launcher extends Repast3Launcher {
     }
 
     private void buildModel() {
-        // create and store agents
-        // create space, data recorders
         agentList = new ArrayList<>();
         space = new Object2DGrid(NUM_LIFTS + 1, NUM_FLOORS);
 
@@ -117,7 +115,6 @@ public class Launcher extends Repast3Launcher {
 
 
     private void buildDisplay() {
-        // create displays, charts
         Object2DDisplay agentDisplay = new Object2DDisplay(space);
 
         dsurf.addDisplayable(agentDisplay, "agents");
@@ -127,7 +124,6 @@ public class Launcher extends Repast3Launcher {
     }
 
     private void buildSchedule() {
-        // Build the schedule with actions to be performed on a regular basis
         getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
         getSchedule().scheduleActionAtInterval(CALL_FREQUENCY, new BasicAction() {
             @Override
@@ -155,7 +151,6 @@ public class Launcher extends Repast3Launcher {
 
     @Override
     protected void launchJADE() {
-        //NOTE TO SELF: THIS IS CALLED BEFORE SETUP()
         Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl();
         mainContainer = rt.createMainContainer(p);
