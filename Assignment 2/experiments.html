@@ -1,0 +1,1126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+	
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title></title>
+	<meta name="generator" content="LibreOffice 6.1.3.2 (Linux)">
+	<meta name="created" content="2018-12-01T16:27:01.662601835">
+	<meta name="changed" content="2018-12-13T19:13:56.163355559">
+	
+	<style type="text/css">
+		body,div,table,thead,tbody,tfoot,tr,th,td,p { font-family:"Liberation Sans"; font-size:x-small }
+		a.comment-indicator:hover + comment { background:#ffd; position:absolute; display:block; border:1px solid black; padding:0.5em;  } 
+		a.comment-indicator { background:red; display:inline-block; border:1px solid black; width:0.5em; height:0.5em;  } 
+		comment { display:none;  } 
+	</style>
+	
+</head>
+
+<body>
+<hr>
+	<p></p><center>
+		<h1>Overview</h1>
+		<a href="#table0">Decision Tree</a><br>
+		<a href="#table1">Naive Bayes</a><br>
+		<a href="#table2">KNN</a><br>
+		
+	</center><p></p>
+<hr>
+<a name="table0"><h1>Sheet 1: <em>Decision Tree</em></h1></a>
+<table cellspacing="0" border="0">
+	<colgroup width="120"></colgroup>
+	<colgroup width="96"></colgroup>
+	<colgroup width="85"></colgroup>
+	<colgroup width="100"></colgroup>
+	<colgroup width="105"></colgroup>
+	<colgroup width="85"></colgroup>
+	<colgroup width="125"></colgroup>
+	<colgroup width="130"></colgroup>
+	<colgroup width="114"></colgroup>
+	<tbody><tr>
+		<td colspan="2" rowspan="2" valign="middle" height="34" align="center"><b><font size="4">Decision Tree</font></b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td colspan="3" valign="middle" height="17" align="center"><b>Criterion – Information gain</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><b>Minimal leaf size</b></td>
+		<td align="left"><b>Acc. Training</b></td>
+		<td align="left"><b>Acc. Testing</b></td>
+		<td align="left"><b>“baixo” recall</b></td>
+		<td align="left"><b>“medio” recall</b></td>
+		<td align="left"><b>“alto” recall</b></td>
+		<td align="left"><b>“baixo” precision</b></td>
+		<td align="left"><b>“medio” precision</b></td>
+		<td align="left"><b>“alto” precision</b></td>
+	</tr>
+	<tr>
+		<td sdval="1" sdnum="1033;" height="17" align="right">1</td>
+		<td sdval="0.8504" sdnum="1033;" align="right">0.8504</td>
+		<td sdval="0.6436" sdnum="1033;" align="right">0.6436</td>
+		<td sdval="0.6978" sdnum="1033;" align="right">0.6978</td>
+		<td sdval="0.5475" sdnum="1033;" align="right">0.5475</td>
+		<td sdval="0.7024" sdnum="1033;" align="right">0.7024</td>
+		<td sdval="0.7165" sdnum="1033;" align="right">0.7165</td>
+		<td sdval="0.5387" sdnum="1033;" align="right">0.5387</td>
+		<td sdval="0.6969" sdnum="1033;" align="right">0.6969</td>
+	</tr>
+	<tr>
+		<td sdval="2" sdnum="1033;" height="17" align="right">2</td>
+		<td sdval="0.84" sdnum="1033;" align="right">0.84</td>
+		<td sdval="0.6388" sdnum="1033;" align="right">0.6388</td>
+		<td sdval="0.6791" sdnum="1033;" align="right">0.6791</td>
+		<td sdval="0.5574" sdnum="1033;" align="right">0.5574</td>
+		<td sdval="0.6944" sdnum="1033;" align="right">0.6944</td>
+		<td sdval="0.7251" sdnum="1033;" align="right">0.7251</td>
+		<td sdval="0.5296" sdnum="1033;" align="right">0.5296</td>
+		<td sdval="0.6917" sdnum="1033;" align="right">0.6917</td>
+	</tr>
+	<tr>
+		<td sdval="5" sdnum="1033;" height="17" align="right">5</td>
+		<td sdval="0.7979" sdnum="1033;" align="right">0.7979</td>
+		<td sdval="0.6509" sdnum="1033;" align="right">0.6509</td>
+		<td sdval="0.6754" sdnum="1033;" align="right">0.6754</td>
+		<td sdval="0.6328" sdnum="1033;" align="right">0.6328</td>
+		<td sdval="0.6468" sdnum="1033;" align="right">0.6468</td>
+		<td sdval="0.7388" sdnum="1033;" align="right">0.7388</td>
+		<td sdval="0.5376" sdnum="1033;" align="right">0.5376</td>
+		<td sdval="0.7376" sdnum="1033;" align="right">0.7376</td>
+	</tr>
+	<tr>
+		<td sdval="10" sdnum="1033;" height="17" align="right">10</td>
+		<td sdval="0.7574" sdnum="1033;" align="right">0.7574</td>
+		<td sdval="0.6218" sdnum="1033;" align="right">0.6218</td>
+		<td sdval="0.6604" sdnum="1033;" align="right">0.6604</td>
+		<td sdval="0.5443" sdnum="1033;" align="right">0.5443</td>
+		<td sdval="0.6746" sdnum="1033;" align="right">0.6746</td>
+		<td sdval="0.686" sdnum="1033;" align="right">0.686</td>
+		<td sdval="0.5076" sdnum="1033;" align="right">0.5076</td>
+		<td sdval="0.7083" sdnum="1033;" align="right">0.7083</td>
+	</tr>
+	<tr>
+		<td sdval="20" sdnum="1033;" height="17" align="right">20</td>
+		<td sdval="0.7049" sdnum="1033;" align="right">0.7049</td>
+		<td sdval="0.6315" sdnum="1033;" align="right">0.6315</td>
+		<td sdval="0.7537" sdnum="1033;" align="right">0.7537</td>
+		<td sdval="0.4852" sdnum="1033;" align="right">0.4852</td>
+		<td sdval="0.6786" sdnum="1033;" align="right">0.6786</td>
+		<td sdval="0.6871" sdnum="1033;" align="right">0.6871</td>
+		<td sdval="0.5362" sdnum="1033;" align="right">0.5362</td>
+		<td sdval="0.6706" sdnum="1033;" align="right">0.6706</td>
+	</tr>
+	<tr>
+		<td sdval="25" sdnum="1033;" height="17" align="right">25</td>
+		<td sdval="0.6878" sdnum="1033;" align="right">0.6878</td>
+		<td sdval="0.6473" sdnum="1033;" align="right">0.6473</td>
+		<td sdval="0.7612" sdnum="1033;" align="right">0.7612</td>
+		<td sdval="0.5246" sdnum="1033;" align="right">0.5246</td>
+		<td sdval="0.6746" sdnum="1033;" align="right">0.6746</td>
+		<td sdval="0.7108" sdnum="1033;" align="right">0.7108</td>
+		<td sdval="0.5517" sdnum="1033;" align="right">0.5517</td>
+		<td sdval="0.6855" sdnum="1033;" align="right">0.6855</td>
+	</tr>
+	<tr>
+		<td sdval="30" sdnum="1033;" height="17" align="right">30</td>
+		<td sdval="0.666" sdnum="1033;" align="right">0.666</td>
+		<td sdval="0.6303" sdnum="1033;" align="right">0.6303</td>
+		<td sdval="0.7164" sdnum="1033;" align="right">0.7164</td>
+		<td sdval="0.5115" sdnum="1033;" align="right">0.5115</td>
+		<td sdval="0.6825" sdnum="1033;" align="right">0.6825</td>
+		<td sdval="0.7111" sdnum="1033;" align="right">0.7111</td>
+		<td sdval="0.5342" sdnum="1033;" align="right">0.5342</td>
+		<td sdval="0.654" sdnum="1033;" align="right">0.654</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td colspan="3" valign="middle" height="17" align="center"><b>Criterion – Gain ratio</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><b>Minimal leaf size</b></td>
+		<td align="left"><b>Acc. Training</b></td>
+		<td align="left"><b>Acc. Testing</b></td>
+		<td align="left"><b>“baixo” recall</b></td>
+		<td align="left"><b>“medio” recall</b></td>
+		<td align="left"><b>“alto” recall</b></td>
+		<td align="left"><b>“baixo” precision</b></td>
+		<td align="left"><b>“medio” precision</b></td>
+		<td align="left"><b>“alto” precision</b></td>
+	</tr>
+	<tr>
+		<td sdval="1" sdnum="1033;" height="17" align="right">1</td>
+		<td sdval="0.6094" sdnum="1033;" align="right">0.6094</td>
+		<td sdval="0.5624" sdnum="1033;" align="right">0.5624</td>
+		<td sdval="0.6194" sdnum="1033;" align="right">0.6194</td>
+		<td sdval="0.3311" sdnum="1033;" align="right">0.3311</td>
+		<td sdval="0.7817" sdnum="1033;" align="right">0.7817</td>
+		<td sdval="0.7615" sdnum="1033;" align="right">0.7615</td>
+		<td sdval="0.5025" sdnum="1033;" align="right">0.5025</td>
+		<td sdval="0.4852" sdnum="1033;" align="right">0.4852</td>
+	</tr>
+	<tr>
+		<td sdval="2" sdnum="1033;" height="17" align="right">2</td>
+		<td sdval="0.6468" sdnum="1033;" align="right">0.6468</td>
+		<td sdval="0.6012" sdnum="1033;" align="right">0.6012</td>
+		<td sdval="0.6493" sdnum="1033;" align="right">0.6493</td>
+		<td sdval="0.4656" sdnum="1033;" align="right">0.4656</td>
+		<td sdval="0.7143" sdnum="1033;" align="right">0.7143</td>
+		<td sdval="0.7733" sdnum="1033;" align="right">0.7733</td>
+		<td sdval="0.5182" sdnum="1033;" align="right">0.5182</td>
+		<td sdval="0.5521" sdnum="1033;" align="right">0.5521</td>
+	</tr>
+	<tr>
+		<td sdval="5" sdnum="1033;" height="17" align="right">5</td>
+		<td sdval="0.6317" sdnum="1033;" align="right">0.6317</td>
+		<td sdval="0.6048" sdnum="1033;" align="right">0.6048</td>
+		<td sdval="0.709" sdnum="1033;" align="right">0.709</td>
+		<td sdval="0.4557" sdnum="1033;" align="right">0.4557</td>
+		<td sdval="0.6746" sdnum="1033;" align="right">0.6746</td>
+		<td sdval="0.7224" sdnum="1033;" align="right">0.7224</td>
+		<td sdval="0.5245" sdnum="1033;" align="right">0.5245</td>
+		<td sdval="0.5724" sdnum="1033;" align="right">0.5724</td>
+	</tr>
+	<tr>
+		<td sdval="10" sdnum="1033;" height="17" align="right">10</td>
+		<td sdval="0.6094" sdnum="1033;" align="right">0.6094</td>
+		<td sdval="0.5842" sdnum="1033;" align="right">0.5842</td>
+		<td sdval="0.6418" sdnum="1033;" align="right">0.6418</td>
+		<td sdval="0.4098" sdnum="1033;" align="right">0.4098</td>
+		<td sdval="0.7341" sdnum="1033;" align="right">0.7341</td>
+		<td sdval="0.6908" sdnum="1033;" align="right">0.6908</td>
+		<td sdval="0.4921" sdnum="1033;" align="right">0.4921</td>
+		<td sdval="0.5745" sdnum="1033;" align="right">0.5745</td>
+	</tr>
+	<tr>
+		<td sdval="20" sdnum="1033;" height="17" align="right">20</td>
+		<td sdval="0.5491" sdnum="1033;" align="right">0.5491</td>
+		<td sdval="0.5103" sdnum="1033;" align="right">0.5103</td>
+		<td sdval="0.5187" sdnum="1033;" align="right">0.5187</td>
+		<td sdval="0.2" sdnum="1033;" align="right">0.2</td>
+		<td sdval="0.877" sdnum="1033;" align="right">0.877</td>
+		<td sdval="0.7433" sdnum="1033;" align="right">0.7433</td>
+		<td sdval="0.3861" sdnum="1033;" align="right">0.3861</td>
+		<td sdval="0.4604" sdnum="1033;" align="right">0.4604</td>
+	</tr>
+	<tr>
+		<td sdval="25" sdnum="1033;" height="17" align="right">25</td>
+		<td sdval="0.5449" sdnum="1033;" align="right">0.5449</td>
+		<td sdval="0.5103" sdnum="1033;" align="right">0.5103</td>
+		<td sdval="0.5709" sdnum="1033;" align="right">0.5709</td>
+		<td sdval="0.1639" sdnum="1033;" align="right">0.1639</td>
+		<td sdval="0.8651" sdnum="1033;" align="right">0.8651</td>
+		<td sdval="0.7051" sdnum="1033;" align="right">0.7051</td>
+		<td sdval="0.3759" sdnum="1033;" align="right">0.3759</td>
+		<td sdval="0.4589" sdnum="1033;" align="right">0.4589</td>
+	</tr>
+	<tr>
+		<td sdval="30" sdnum="1033;" height="17" align="right">30</td>
+		<td sdval="0.5449" sdnum="1033;" align="right">0.5449</td>
+		<td sdval="0.5103" sdnum="1033;" align="right">0.5103</td>
+		<td sdval="0.5709" sdnum="1033;" align="right">0.5709</td>
+		<td sdval="0.1639" sdnum="1033;" align="right">0.1639</td>
+		<td sdval="0.8651" sdnum="1033;" align="right">0.8651</td>
+		<td sdval="0.7051" sdnum="1033;" align="right">0.7051</td>
+		<td sdval="0.3759" sdnum="1033;" align="right">0.3759</td>
+		<td sdval="0.4589" sdnum="1033;" align="right">0.4589</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td colspan="3" valign="middle" height="17" align="center"><b>Criterion – Accuracy</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><b>Minimal leaf size</b></td>
+		<td align="left"><b>Acc. Training</b></td>
+		<td align="left"><b>Acc. Testing</b></td>
+		<td align="left"><b>“baixo” recall</b></td>
+		<td align="left"><b>“medio” recall</b></td>
+		<td align="left"><b>“alto” recall</b></td>
+		<td align="left"><b>“baixo” precision</b></td>
+		<td align="left"><b>“medio” precision</b></td>
+		<td align="left"><b>“alto” precision</b></td>
+	</tr>
+	<tr>
+		<td sdval="1" sdnum="1033;" height="17" align="right">1</td>
+		<td sdval="0.7512" sdnum="1033;" align="right">0.7512</td>
+		<td sdval="0.6158" sdnum="1033;" align="right">0.6158</td>
+		<td sdval="0.7201" sdnum="1033;" align="right">0.7201</td>
+		<td sdval="0.4852" sdnum="1033;" align="right">0.4852</td>
+		<td sdval="0.6627" sdnum="1033;" align="right">0.6627</td>
+		<td sdval="0.652" sdnum="1033;" align="right">0.652</td>
+		<td sdval="0.5248" sdnum="1033;" align="right">0.5248</td>
+		<td sdval="0.6761" sdnum="1033;" align="right">0.6761</td>
+	</tr>
+	<tr>
+		<td sdval="2" sdnum="1033;" height="17" align="right">2</td>
+		<td sdval="0.7361" sdnum="1033;" align="right">0.7361</td>
+		<td sdval="0.6242" sdnum="1033;" align="right">0.6242</td>
+		<td sdval="0.7127" sdnum="1033;" align="right">0.7127</td>
+		<td sdval="0.5016" sdnum="1033;" align="right">0.5016</td>
+		<td sdval="0.6786" sdnum="1033;" align="right">0.6786</td>
+		<td sdval="0.6541" sdnum="1033;" align="right">0.6541</td>
+		<td sdval="0.5312" sdnum="1033;" align="right">0.5312</td>
+		<td sdval="0.698" sdnum="1033;" align="right">0.698</td>
+	</tr>
+	<tr>
+		<td sdval="5" sdnum="1033;" height="17" align="right">5</td>
+		<td sdval="0.707" sdnum="1033;" align="right">0.707</td>
+		<td sdval="0.6121" sdnum="1033;" align="right">0.6121</td>
+		<td sdval="0.694" sdnum="1033;" align="right">0.694</td>
+		<td sdval="0.4852" sdnum="1033;" align="right">0.4852</td>
+		<td sdval="0.6786" sdnum="1033;" align="right">0.6786</td>
+		<td sdval="0.6503" sdnum="1033;" align="right">0.6503</td>
+		<td sdval="0.5157" sdnum="1033;" align="right">0.5157</td>
+		<td sdval="0.6786" sdnum="1033;" align="right">0.6786</td>
+	</tr>
+	<tr>
+		<td sdval="10" sdnum="1033;" height="17" align="right">10</td>
+		<td sdval="0.6769" sdnum="1033;" align="right">0.6769</td>
+		<td sdval="0.6036" sdnum="1033;" align="right">0.6036</td>
+		<td sdval="0.6978" sdnum="1033;" align="right">0.6978</td>
+		<td sdval="0.4852" sdnum="1033;" align="right">0.4852</td>
+		<td sdval="0.6468" sdnum="1033;" align="right">0.6468</td>
+		<td sdval="0.6361" sdnum="1033;" align="right">0.6361</td>
+		<td sdval="0.5068" sdnum="1033;" align="right">0.5068</td>
+		<td sdval="0.682" sdnum="1033;" align="right">0.682</td>
+	</tr>
+	<tr>
+		<td sdval="20" sdnum="1033;" height="17" align="right">20</td>
+		<td sdval="0.6597" sdnum="1033;" align="right">0.6597</td>
+		<td sdval="0.6" sdnum="1033;" align="right">0.6</td>
+		<td sdval="0.694" sdnum="1033;" align="right">0.694</td>
+		<td sdval="0.4852" sdnum="1033;" align="right">0.4852</td>
+		<td sdval="0.6389" sdnum="1033;" align="right">0.6389</td>
+		<td sdval="0.6458" sdnum="1033;" align="right">0.6458</td>
+		<td sdval="0.5" sdnum="1033;" align="right">0.5</td>
+		<td sdval="0.668" sdnum="1033;" align="right">0.668</td>
+	</tr>
+	<tr>
+		<td sdval="25" sdnum="1033;" height="17" align="right">25</td>
+		<td sdval="0.6442" sdnum="1033;" align="right">0.6442</td>
+		<td sdval="0.5952" sdnum="1033;" align="right">0.5952</td>
+		<td sdval="0.6978" sdnum="1033;" align="right">0.6978</td>
+		<td sdval="0.4689" sdnum="1033;" align="right">0.4689</td>
+		<td sdval="0.6389" sdnum="1033;" align="right">0.6389</td>
+		<td sdval="0.6254" sdnum="1033;" align="right">0.6254</td>
+		<td sdval="0.5018" sdnum="1033;" align="right">0.5018</td>
+		<td sdval="0.668" sdnum="1033;" align="right">0.668</td>
+	</tr>
+	<tr>
+		<td sdval="30" sdnum="1033;" height="17" align="right">30</td>
+		<td sdval="0.641" sdnum="1033;" align="right">0.641</td>
+		<td sdval="0.6036" sdnum="1033;" align="right">0.6036</td>
+		<td sdval="0.6604" sdnum="1033;" align="right">0.6604</td>
+		<td sdval="0.4951" sdnum="1033;" align="right">0.4951</td>
+		<td sdval="0.6746" sdnum="1033;" align="right">0.6746</td>
+		<td sdval="0.6484" sdnum="1033;" align="right">0.6484</td>
+		<td sdval="0.505" sdnum="1033;" align="right">0.505</td>
+		<td sdval="0.6719" sdnum="1033;" align="right">0.6719</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td colspan="3" valign="middle" height="17" align="center"><b>Confusion matrices (Information Gain)</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><b><br></b></td>
+		<td align="left">true medio</td>
+		<td align="left">true alto</td>
+		<td align="left">true baixo</td>
+		<td align="left"><br></td>
+		<td align="left"><b>Minimal leaf size</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Medio</td>
+		<td sdval="167" sdnum="1033;" align="right">167</td>
+		<td sdval="68" sdnum="1033;" align="right">68</td>
+		<td sdval="75" sdnum="1033;" align="right">75</td>
+		<td align="left"><br></td>
+		<td sdval="1" sdnum="1033;" align="right">1</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Alto</td>
+		<td sdval="71" sdnum="1033;" align="right">71</td>
+		<td sdval="177" sdnum="1033;" align="right">177</td>
+		<td sdval="6" sdnum="1033;" align="right">6</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Baixo</td>
+		<td sdval="67" sdnum="1033;" align="right">67</td>
+		<td sdval="7" sdnum="1033;" align="right">7</td>
+		<td sdval="187" sdnum="1033;" align="right">187</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><b><br></b></td>
+		<td align="left">true medio</td>
+		<td align="left">true alto</td>
+		<td align="left">true baixo</td>
+		<td align="left"><br></td>
+		<td align="left"><b>Minimal leaf size</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Medio</td>
+		<td sdval="170" sdnum="1033;" align="right">170</td>
+		<td sdval="71" sdnum="1033;" align="right">71</td>
+		<td sdval="80" sdnum="1033;" align="right">80</td>
+		<td align="left"><br></td>
+		<td sdval="2" sdnum="1033;" align="right">2</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Alto</td>
+		<td sdval="72" sdnum="1033;" align="right">72</td>
+		<td sdval="175" sdnum="1033;" align="right">175</td>
+		<td sdval="6" sdnum="1033;" align="right">6</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Baixo</td>
+		<td sdval="63" sdnum="1033;" align="right">63</td>
+		<td sdval="6" sdnum="1033;" align="right">6</td>
+		<td sdval="182" sdnum="1033;" align="right">182</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><b><br></b></td>
+		<td align="left">true medio</td>
+		<td align="left">true alto</td>
+		<td align="left">true baixo</td>
+		<td align="left"><br></td>
+		<td align="left"><b>Minimal leaf size</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Medio</td>
+		<td sdval="193" sdnum="1033;" align="right">193</td>
+		<td sdval="83" sdnum="1033;" align="right">83</td>
+		<td sdval="83" sdnum="1033;" align="right">83</td>
+		<td align="left"><br></td>
+		<td sdval="5" sdnum="1033;" align="right">5</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Alto</td>
+		<td sdval="54" sdnum="1033;" align="right">54</td>
+		<td sdval="163" sdnum="1033;" align="right">163</td>
+		<td sdval="4" sdnum="1033;" align="right">4</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Baixo</td>
+		<td sdval="58" sdnum="1033;" align="right">58</td>
+		<td sdval="6" sdnum="1033;" align="right">6</td>
+		<td sdval="181" sdnum="1033;" align="right">181</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><b><br></b></td>
+		<td align="left">true medio</td>
+		<td align="left">true alto</td>
+		<td align="left">true baixo</td>
+		<td align="left"><br></td>
+		<td align="left"><b>Minimal leaf size</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Medio</td>
+		<td sdval="166" sdnum="1033;" align="right">166</td>
+		<td sdval="74" sdnum="1033;" align="right">74</td>
+		<td sdval="87" sdnum="1033;" align="right">87</td>
+		<td align="left"><br></td>
+		<td sdval="10" sdnum="1033;" align="right">10</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Alto</td>
+		<td sdval="66" sdnum="1033;" align="right">66</td>
+		<td sdval="170" sdnum="1033;" align="right">170</td>
+		<td sdval="4" sdnum="1033;" align="right">4</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Baixo</td>
+		<td sdval="73" sdnum="1033;" align="right">73</td>
+		<td sdval="8" sdnum="1033;" align="right">8</td>
+		<td sdval="177" sdnum="1033;" align="right">177</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><b><br></b></td>
+		<td align="left">true medio</td>
+		<td align="left">true alto</td>
+		<td align="left">true baixo</td>
+		<td align="left"><br></td>
+		<td align="left"><b>Minimal leaf size</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Medio</td>
+		<td sdval="148" sdnum="1033;" align="right">148</td>
+		<td sdval="69" sdnum="1033;" align="right">69</td>
+		<td sdval="59" sdnum="1033;" align="right">59</td>
+		<td align="left"><br></td>
+		<td sdval="20" sdnum="1033;" align="right">20</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Alto</td>
+		<td sdval="77" sdnum="1033;" align="right">77</td>
+		<td sdval="171" sdnum="1033;" align="right">171</td>
+		<td sdval="7" sdnum="1033;" align="right">7</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Baixo</td>
+		<td sdval="80" sdnum="1033;" align="right">80</td>
+		<td sdval="12" sdnum="1033;" align="right">12</td>
+		<td sdval="202" sdnum="1033;" align="right">202</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><b><br></b></td>
+		<td align="left">true medio</td>
+		<td align="left">true alto</td>
+		<td align="left">true baixo</td>
+		<td align="left"><br></td>
+		<td align="left"><b>Minimal leaf size</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Medio</td>
+		<td sdval="160" sdnum="1033;" align="right">160</td>
+		<td sdval="72" sdnum="1033;" align="right">72</td>
+		<td sdval="58" sdnum="1033;" align="right">58</td>
+		<td align="left"><br></td>
+		<td sdval="25" sdnum="1033;" align="right">25</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Alto</td>
+		<td sdval="72" sdnum="1033;" align="right">72</td>
+		<td sdval="170" sdnum="1033;" align="right">170</td>
+		<td sdval="6" sdnum="1033;" align="right">6</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Baixo</td>
+		<td sdval="73" sdnum="1033;" align="right">73</td>
+		<td sdval="10" sdnum="1033;" align="right">10</td>
+		<td sdval="204" sdnum="1033;" align="right">204</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><b><br></b></td>
+		<td align="left">true medio</td>
+		<td align="left">true alto</td>
+		<td align="left">true baixo</td>
+		<td align="left"><br></td>
+		<td align="left"><b>Minimal leaf size</b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Medio</td>
+		<td sdval="156" sdnum="1033;" align="right">156</td>
+		<td sdval="71" sdnum="1033;" align="right">71</td>
+		<td sdval="65" sdnum="1033;" align="right">65</td>
+		<td align="left"><br></td>
+		<td sdval="30" sdnum="1033;" align="right">30</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Alto</td>
+		<td sdval="80" sdnum="1033;" align="right">80</td>
+		<td sdval="172" sdnum="1033;" align="right">172</td>
+		<td sdval="11" sdnum="1033;" align="right">11</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left">pred. Baixo</td>
+		<td sdval="69" sdnum="1033;" align="right">69</td>
+		<td sdval="9" sdnum="1033;" align="right">9</td>
+		<td sdval="192" sdnum="1033;" align="right">192</td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td bgcolor="#000000" align="left"><font color="#000000"><br></font></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+</tbody></table>
+<!-- ************************************************************************** -->
+<hr>
+<a name="table1"><h1>Sheet 2: <em>Naive Bayes</em></h1></a>
+<table cellspacing="0" border="0">
+	<colgroup width="85"></colgroup>
+	<colgroup width="133"></colgroup>
+	<colgroup width="85"></colgroup>
+	<colgroup width="100"></colgroup>
+	<colgroup width="105"></colgroup>
+	<colgroup width="89"></colgroup>
+	<colgroup width="125"></colgroup>
+	<colgroup width="130"></colgroup>
+	<colgroup width="114"></colgroup>
+	<tbody><tr>
+		<td colspan="2" rowspan="2" valign="middle" height="34" align="center"><b><font size="4">Naive Bayes</font></b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><b>Acc. Training</b></td>
+		<td align="left"><b>Acc. Testing</b></td>
+		<td align="left"><b>“baixo” recall</b></td>
+		<td align="left"><b>“medio” recall</b></td>
+		<td align="left"><b>“alto” recall</b></td>
+		<td align="left"><b>“baixo” precision</b></td>
+		<td align="left"><b>“medio” precision</b></td>
+		<td align="left"><b>“alto” precision</b></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="0.586" sdnum="1033;" align="right">0.586</td>
+		<td sdval="0.5406" sdnum="1033;" align="right">0.5406</td>
+		<td sdval="0.5858" sdnum="1033;" align="right">0.5858</td>
+		<td sdval="0.4361" sdnum="1033;" align="right">0.4361</td>
+		<td sdval="0.619" sdnum="1033;" align="right">0.619</td>
+		<td sdval="0.6331" sdnum="1033;" align="right">0.6331</td>
+		<td sdval="0.4539" sdnum="1033;" align="right">0.4539</td>
+		<td sdval="0.5493" sdnum="1033;" align="right">0.5493</td>
+	</tr>
+</tbody></table>
+<!-- ************************************************************************** -->
+<hr>
+<a name="table2"><h1>Sheet 3: <em>KNN</em></h1></a>
+<table cellspacing="0" border="0">
+	<colgroup width="85" span="2"></colgroup>
+	<colgroup width="96"></colgroup>
+	<colgroup width="85"></colgroup>
+	<colgroup width="100"></colgroup>
+	<colgroup width="105"></colgroup>
+	<colgroup width="85"></colgroup>
+	<colgroup width="125"></colgroup>
+	<colgroup width="130"></colgroup>
+	<colgroup width="114"></colgroup>
+	<tbody><tr>
+		<td colspan="2" rowspan="2" valign="middle" height="34" align="center"><b><font size="4">kNN</font></b></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+		<td align="left"><br></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td align="left"><b>k</b></td>
+		<td align="left"><b>Acc. Training</b></td>
+		<td align="left"><b>Acc. Testing</b></td>
+		<td align="left"><b>“baixo” recall</b></td>
+		<td align="left"><b>“medio” recall</b></td>
+		<td align="left"><b>“alto” recall</b></td>
+		<td align="left"><b>“baixo” precision</b></td>
+		<td align="left"><b>“medio” precision</b></td>
+		<td align="left"><b>“alto” precision</b></td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="1" sdnum="1033;" align="right">1</td>
+		<td sdval="1" sdnum="1033;" align="right">1</td>
+		<td sdval="0.5515" sdnum="1033;" align="right">0.5515</td>
+		<td sdval="0.6343" sdnum="1033;" align="right">0.6343</td>
+		<td sdval="0.459" sdnum="1033;" align="right">0.459</td>
+		<td sdval="0.5754" sdnum="1033;" align="right">0.5754</td>
+		<td sdval="0.5743" sdnum="1033;" align="right">0.5743</td>
+		<td sdval="0.5" sdnum="1033;" align="right">0.5</td>
+		<td sdval="0.5823" sdnum="1033;" align="right">0.5823</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="3" sdnum="1033;" align="right">3</td>
+		<td sdval="0.9356" sdnum="1033;" align="right">0.9356</td>
+		<td sdval="0.5636" sdnum="1033;" align="right">0.5636</td>
+		<td sdval="0.6269" sdnum="1033;" align="right">0.6269</td>
+		<td sdval="0.4885" sdnum="1033;" align="right">0.4885</td>
+		<td sdval="0.5873" sdnum="1033;" align="right">0.5873</td>
+		<td sdval="0.5895" sdnum="1033;" align="right">0.5895</td>
+		<td sdval="0.4983" sdnum="1033;" align="right">0.4983</td>
+		<td sdval="0.6141" sdnum="1033;" align="right">0.6141</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="5" sdnum="1033;" align="right">5</td>
+		<td sdval="0.774" sdnum="1033;" align="right">0.774</td>
+		<td sdval="0.5733" sdnum="1033;" align="right">0.5733</td>
+		<td sdval="0.6493" sdnum="1033;" align="right">0.6493</td>
+		<td sdval="0.4918" sdnum="1033;" align="right">0.4918</td>
+		<td sdval="0.5913" sdnum="1033;" align="right">0.5913</td>
+		<td sdval="0.6127" sdnum="1033;" align="right">0.6127</td>
+		<td sdval="0.5017" sdnum="1033;" align="right">0.5017</td>
+		<td sdval="0.6157" sdnum="1033;" align="right">0.6157</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="7" sdnum="1033;" align="right">7</td>
+		<td sdval="0.7392" sdnum="1033;" align="right">0.7392</td>
+		<td sdval="0.583" sdnum="1033;" align="right">0.583</td>
+		<td sdval="0.6567" sdnum="1033;" align="right">0.6567</td>
+		<td sdval="0.5049" sdnum="1033;" align="right">0.5049</td>
+		<td sdval="0.5992" sdnum="1033;" align="right">0.5992</td>
+		<td sdval="0.6048" sdnum="1033;" align="right">0.6048</td>
+		<td sdval="0.5083" sdnum="1033;" align="right">0.5083</td>
+		<td sdval="0.6537" sdnum="1033;" align="right">0.6537</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="11" sdnum="1033;" align="right">11</td>
+		<td sdval="0.7008" sdnum="1033;" align="right">0.7008</td>
+		<td sdval="0.5721" sdnum="1033;" align="right">0.5721</td>
+		<td sdval="0.6455" sdnum="1033;" align="right">0.6455</td>
+		<td sdval="0.4951" sdnum="1033;" align="right">0.4951</td>
+		<td sdval="0.5873" sdnum="1033;" align="right">0.5873</td>
+		<td sdval="0.5945" sdnum="1033;" align="right">0.5945</td>
+		<td sdval="0.5017" sdnum="1033;" align="right">0.5017</td>
+		<td sdval="0.6352" sdnum="1033;" align="right">0.6352</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="15" sdnum="1033;" align="right">15</td>
+		<td sdval="0.666" sdnum="1033;" align="right">0.666</td>
+		<td sdval="0.5867" sdnum="1033;" align="right">0.5867</td>
+		<td sdval="0.6418" sdnum="1033;" align="right">0.6418</td>
+		<td sdval="0.5344" sdnum="1033;" align="right">0.5344</td>
+		<td sdval="0.5913" sdnum="1033;" align="right">0.5913</td>
+		<td sdval="0.6099" sdnum="1033;" align="right">0.6099</td>
+		<td sdval="0.5142" sdnum="1033;" align="right">0.5142</td>
+		<td sdval="0.6593" sdnum="1033;" align="right">0.6593</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="17" sdnum="1033;" align="right">17</td>
+		<td sdval="0.6478" sdnum="1033;" align="right">0.6478</td>
+		<td sdval="0.5867" sdnum="1033;" align="right">0.5867</td>
+		<td sdval="0.653" sdnum="1033;" align="right">0.653</td>
+		<td sdval="0.5246" sdnum="1033;" align="right">0.5246</td>
+		<td sdval="0.5913" sdnum="1033;" align="right">0.5913</td>
+		<td sdval="0.6162" sdnum="1033;" align="right">0.6162</td>
+		<td sdval="0.5128" sdnum="1033;" align="right">0.5128</td>
+		<td sdval="0.6507" sdnum="1033;" align="right">0.6507</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="23" sdnum="1033;" align="right">23</td>
+		<td sdval="0.626" sdnum="1033;" align="right">0.626</td>
+		<td sdval="0.5903" sdnum="1033;" align="right">0.5903</td>
+		<td sdval="0.6455" sdnum="1033;" align="right">0.6455</td>
+		<td sdval="0.5213" sdnum="1033;" align="right">0.5213</td>
+		<td sdval="0.6151" sdnum="1033;" align="right">0.6151</td>
+		<td sdval="0.5986" sdnum="1033;" align="right">0.5986</td>
+		<td sdval="0.523" sdnum="1033;" align="right">0.523</td>
+		<td sdval="0.6681" sdnum="1033;" align="right">0.6681</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="31" sdnum="1033;" align="right">31</td>
+		<td sdval="0.6197" sdnum="1033;" align="right">0.6197</td>
+		<td sdval="0.577" sdnum="1033;" align="right">0.577</td>
+		<td sdval="0.6231" sdnum="1033;" align="right">0.6231</td>
+		<td sdval="0.4984" sdnum="1033;" align="right">0.4984</td>
+		<td sdval="0.623" sdnum="1033;" align="right">0.623</td>
+		<td sdval="0.6007" sdnum="1033;" align="right">0.6007</td>
+		<td sdval="0.5067" sdnum="1033;" align="right">0.5067</td>
+		<td sdval="0.6356" sdnum="1033;" align="right">0.6356</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="41" sdnum="1033;" align="right">41</td>
+		<td sdval="0.5922" sdnum="1033;" align="right">0.5922</td>
+		<td sdval="0.5758" sdnum="1033;" align="right">0.5758</td>
+		<td sdval="0.6269" sdnum="1033;" align="right">0.6269</td>
+		<td sdval="0.4885" sdnum="1033;" align="right">0.4885</td>
+		<td sdval="0.627" sdnum="1033;" align="right">0.627</td>
+		<td sdval="0.6" sdnum="1033;" align="right">0.6</td>
+		<td sdval="0.5" sdnum="1033;" align="right">0.5</td>
+		<td sdval="0.6397" sdnum="1033;" align="right">0.6397</td>
+	</tr>
+	<tr>
+		<td height="17" align="left"><br></td>
+		<td sdval="53" sdnum="1033;" align="right">53</td>
+		<td sdval="0.5745" sdnum="1033;" align="right">0.5745</td>
+		<td sdval="0.577" sdnum="1033;" align="right">0.577</td>
+		<td sdval="0.6119" sdnum="1033;" align="right">0.6119</td>
+		<td sdval="0.5148" sdnum="1033;" align="right">0.5148</td>
+		<td sdval="0.6151" sdnum="1033;" align="right">0.6151</td>
+		<td sdval="0.6052" sdnum="1033;" align="right">0.6052</td>
+		<td sdval="0.5048" sdnum="1033;" align="right">0.5048</td>
+		<td sdval="0.6379" sdnum="1033;" align="right">0.6379</td>
+	</tr>
+</tbody></table>
+<!-- ************************************************************************** -->
+
+
+
+</body></html>

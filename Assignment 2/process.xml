@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.0.003">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.0.003" expanded="true" name="Process">
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.0.003" expanded="true" height="68" name="Retrieve data" width="90" x="112" y="34">
+        <parameter key="repository_entry" value="../Data/data"/>
+      </operator>
+      <operator activated="true" class="split_validation" compatibility="9.0.003" expanded="true" height="145" name="Validation" width="90" x="380" y="34">
+        <process expanded="true">
+          <operator activated="true" class="select_subprocess" compatibility="9.0.003" expanded="true" height="103" name="Training Algorithm" width="90" x="45" y="136">
+            <process expanded="true">
+              <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="9.0.003" expanded="true" height="103" name="Decision Tree" width="90" x="179" y="34">
+                <parameter key="criterion" value="accuracy"/>
+                <parameter key="minimal_leaf_size" value="30"/>
+              </operator>
+              <connect from_port="input 1" to_op="Decision Tree" to_port="training set"/>
+              <connect from_op="Decision Tree" from_port="model" to_port="output 1"/>
+              <connect from_op="Decision Tree" from_port="exampleSet" to_port="output 2"/>
+              <portSpacing port="source_input 1" spacing="0"/>
+              <portSpacing port="source_input 2" spacing="0"/>
+              <portSpacing port="sink_output 1" spacing="0"/>
+              <portSpacing port="sink_output 2" spacing="0"/>
+              <portSpacing port="sink_output 3" spacing="0"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="k_nn" compatibility="9.0.003" expanded="true" height="82" name="k-NN" width="90" x="112" y="34">
+                <parameter key="k" value="53"/>
+              </operator>
+              <connect from_port="input 1" to_op="k-NN" to_port="training set"/>
+              <connect from_op="k-NN" from_port="model" to_port="output 1"/>
+              <connect from_op="k-NN" from_port="exampleSet" to_port="output 2"/>
+              <portSpacing port="source_input 1" spacing="0"/>
+              <portSpacing port="source_input 2" spacing="0"/>
+              <portSpacing port="sink_output 1" spacing="0"/>
+              <portSpacing port="sink_output 2" spacing="0"/>
+              <portSpacing port="sink_output 3" spacing="0"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="naive_bayes" compatibility="9.0.003" expanded="true" height="82" name="Naive Bayes" width="90" x="112" y="34"/>
+              <connect from_port="input 1" to_op="Naive Bayes" to_port="training set"/>
+              <connect from_op="Naive Bayes" from_port="model" to_port="output 1"/>
+              <connect from_op="Naive Bayes" from_port="exampleSet" to_port="output 2"/>
+              <portSpacing port="source_input 1" spacing="0"/>
+              <portSpacing port="source_input 2" spacing="0"/>
+              <portSpacing port="sink_output 1" spacing="0"/>
+              <portSpacing port="sink_output 2" spacing="0"/>
+              <portSpacing port="sink_output 3" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="apply_model" compatibility="9.0.003" expanded="true" height="82" name="Apply Model Training" width="90" x="179" y="136">
+            <list key="application_parameters"/>
+          </operator>
+          <operator activated="true" class="performance_classification" compatibility="9.0.003" expanded="true" height="82" name="Performance Training" width="90" x="313" y="289">
+            <parameter key="classification_error" value="true"/>
+            <list key="class_weights"/>
+          </operator>
+          <connect from_port="training" to_op="Training Algorithm" to_port="input 1"/>
+          <connect from_op="Training Algorithm" from_port="output 1" to_op="Apply Model Training" to_port="model"/>
+          <connect from_op="Training Algorithm" from_port="output 2" to_op="Apply Model Training" to_port="unlabelled data"/>
+          <connect from_op="Apply Model Training" from_port="labelled data" to_op="Performance Training" to_port="labelled data"/>
+          <connect from_op="Apply Model Training" from_port="model" to_port="model"/>
+          <connect from_op="Performance Training" from_port="performance" to_port="through 1"/>
+          <portSpacing port="source_training" spacing="0"/>
+          <portSpacing port="sink_model" spacing="0"/>
+          <portSpacing port="sink_through 1" spacing="0"/>
+          <portSpacing port="sink_through 2" spacing="0"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="9.0.003" expanded="true" height="82" name="Apply Model Testing" width="90" x="112" y="34">
+            <list key="application_parameters"/>
+          </operator>
+          <operator activated="true" class="performance_classification" compatibility="9.0.003" expanded="true" height="82" name="Performance Testing" width="90" x="246" y="187">
+            <parameter key="classification_error" value="true"/>
+            <list key="class_weights"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model Testing" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model Testing" to_port="unlabelled data"/>
+          <connect from_port="through 1" to_port="averagable 1"/>
+          <connect from_op="Apply Model Testing" from_port="labelled data" to_op="Performance Testing" to_port="labelled data"/>
+          <connect from_op="Performance Testing" from_port="performance" to_port="averagable 2"/>
+          <portSpacing port="source_model" spacing="0"/>
+          <portSpacing port="source_test set" spacing="0"/>
+          <portSpacing port="source_through 1" spacing="0"/>
+          <portSpacing port="source_through 2" spacing="0"/>
+          <portSpacing port="sink_averagable 1" spacing="0"/>
+          <portSpacing port="sink_averagable 2" spacing="0"/>
+          <portSpacing port="sink_averagable 3" spacing="0"/>
+        </process>
+      </operator>
+      <connect from_op="Retrieve data" from_port="output" to_op="Validation" to_port="training"/>
+      <connect from_op="Validation" from_port="model" to_port="result 1"/>
+      <connect from_op="Validation" from_port="averagable 1" to_port="result 2"/>
+      <connect from_op="Validation" from_port="averagable 2" to_port="result 3"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+    </process>
+  </operator>
+</process>
+
